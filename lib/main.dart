@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:konet/screens/chat_screen.dart';
+import 'package:konet/screens/login_screen.dart';
+import 'package:konet/screens/registration_screen.dart';
+import 'package:konet/screens/welcome_screen.dart';
 
 void main() {
   runApp(const KonetApp());
@@ -29,13 +33,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
-      ),
-      body: Center(child: Text('konetApp')),
+    return MaterialApp(
+      initialRoute: WelcomeScreen.welcomeScreenId,
+      routes: {
+        WelcomeScreen.welcomeScreenId: (ctx) => WelcomeScreen(),
+        RegistrationScreen.registrationScreenId: (ctx) => RegistrationScreen(),
+        LoginScreen.loginId: (ctx) => LoginScreen(),
+        ChatScreen.chatScreenId: (ctx) => ChatScreen(),
+      },
     );
   }
 }
