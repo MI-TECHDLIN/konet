@@ -9,13 +9,20 @@ class FirstScreen extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          left: 110,
+          left: 98,
 
-          child: Text('konet', style: TextStyle(fontSize: 80)),
+          child: Text(
+            'konet',
+            style: TextStyle(
+              fontSize: 100,
+              fontFamily: 'InstrumentSerif',
+              fontWeight: FontWeight.w300,
+            ),
+          ),
         ),
 
         Positioned(
-          left: 75,
+          left: 55,
           top: 110,
 
           child: SizedBox(
@@ -24,14 +31,18 @@ class FirstScreen extends StatelessWidget {
             child: Text(
               'a quiet place to talk to the people you love.',
               textAlign: .center,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'inter',
+                fontWeight: FontWeight.w200,
+              ),
             ),
           ),
         ),
 
         Positioned(
-          left: 50,
-          top: 220,
+          top: 250,
+          left: 20,
           child: Column(
             children: [
               SizedBox(
