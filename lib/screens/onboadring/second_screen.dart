@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 
 class SecondScreen extends StatelessWidget {
@@ -5,6 +6,121 @@ class SecondScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Stack(
+      children: [
+        Positioned(
+          top: 20,
+          left: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'your number',
+                style: TextStyle(fontFamily: 'InstrumentSerif', fontSize: 48),
+              ),
+
+              SizedBox(
+                height: 80,
+                width: 240,
+                child: Text(
+                  "we'll send a code to verify your account.",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Positioned(
+          top: 180,
+          left: 20,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0x3916161A)),
+                      borderRadius: BorderRadius.circular(18),
+                      color: Colors.white,
+                    ),
+                    height: 64,
+                    width: 96,
+                    child: CountryCodePicker(
+                      dialogSize: Size(20, 20),
+                      flagDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      flagWidth: 40,
+                      onChanged: print,
+                      initialSelection: 'NIG',
+                      favorite: ['+234', 'NIG'],
+                      showCountryOnly: false,
+                      showOnlyCountryWhenClosed: false,
+                      alignLeft: false,
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.only(left: 30),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+                    decoration: BoxDecoration(
+                      color: Color(0xffFFFFFF),
+                      border: Border.all(color: Color(0xff4F46E5)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    height: 64,
+                    width: 203,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+
+                        hint: Text(
+                          '(555) 000-0000',
+                          style: TextStyle(
+                            color: Color(0xff6B7280),
+                            fontSize: 20,
+                            wordSpacing: 3.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          left: 20,
+          top: 290,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'i',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff4F46E5),
+                ),
+              ),
+              SizedBox(width: 10),
+              Column(
+                children: [
+                  Text(
+                    'konet uses your number only for verification.',
+                    style: TextStyle(color: Color(0xff6B7280)),
+                  ),
+                  Text(
+                    'We never share it with anyone.',
+                    style: TextStyle(color: Color(0xff6B7280)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
