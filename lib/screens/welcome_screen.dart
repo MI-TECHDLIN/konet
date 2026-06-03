@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:konet/screens/onboadring/first_screen.dart';
+import 'package:konet/screens/onboadring/last_screen.dart';
 import 'package:konet/screens/onboadring/second_screen.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:konet/screens/onboadring/third_screen.dart';
@@ -16,7 +17,12 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   PageController pageController = PageController();
 
-  final List<Widget> _pages = [FirstScreen(), SecondScreen(), ThirdScreen()];
+  final List<Widget> _pages = [
+    FirstScreen(),
+    SecondScreen(),
+    ThirdScreen(),
+    LastScreen(),
+  ];
   int currentslide = 0;
   int get totalslide => _pages.length;
   bool nextslide = false;
