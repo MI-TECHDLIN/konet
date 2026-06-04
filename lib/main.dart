@@ -9,8 +9,6 @@ void main() {
 }
 
 class KonetApp extends StatefulWidget {
-  const KonetApp({super.key});
-
   @override
   State<KonetApp> createState() => _KonetAppState();
 }
