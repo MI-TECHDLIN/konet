@@ -41,7 +41,7 @@ class _LastScreenState extends State<LastScreen> {
         ),
 
         Positioned(
-          top: 145,
+          top: 130,
           left: 125,
           child: Column(
             children: [
@@ -58,7 +58,7 @@ class _LastScreenState extends State<LastScreen> {
           ),
         ),
         Positioned(
-          top: 236,
+          top: 230,
           left: 213,
           child: Container(
             height: 40,
@@ -72,7 +72,7 @@ class _LastScreenState extends State<LastScreen> {
         ),
 
         Positioned(
-          top: 315,
+          top: 290,
           left: 8,
           child: Row(
             children: [
@@ -174,6 +174,50 @@ class _LastScreenState extends State<LastScreen> {
                   avater: avater,
                   avaterstate: avaterlist.sixth,
                   color: [Color(0xff4FACFE), Color(0xff00F2FE)],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Positioned(
+          top: 400,
+          left: 8,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'YOUR  USERNAME',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'inter',
+                  ),
+                ),
+              ),
+              Container(
+                height: 55,
+                width: 350,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hint: Container(
+                      margin: EdgeInsets.only(left: 30),
+                      child: Text(
+                        'Alex Rivers',
+                        style: TextStyle(
+                          color: Color(0x826B7280),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ],
