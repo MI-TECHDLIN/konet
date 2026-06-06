@@ -56,6 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xffF6F5F1),
 
       appBar: AppBar(
@@ -93,48 +94,52 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 568.5,
-                width: 375,
-                child: PageView(
-                  controller: pageController,
-                  onPageChanged: (value) => pagecall(context, value),
-                  children: _pages,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 568.5,
+                  width: 375,
+                  child: PageView(
+                    controller: pageController,
+                    onPageChanged: (value) => pagecall(context, value),
+                    children: _pages,
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                height: 56,
-                width: 327,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(18),
+                SizedBox(height: 10),
+                SizedBox(
+                  height: 56,
+                  width: 327,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(18),
+                        ),
+                      ),
+                      backgroundColor: WidgetStatePropertyAll(
+                        Color(0xff4F46E5),
                       ),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(Color(0xff4F46E5)),
-                  ),
-                  onPressed: () => nextslidefunc(),
-                  child: Text(
-                    'get started',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    onPressed: () => nextslidefunc(),
+                    child: Text(
+                      'get started',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'By continuing, you agree to our quiet terms.',
-                style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  fontFamily: 'inter',
+                SizedBox(height: 20),
+                Text(
+                  'By continuing, you agree to our quiet terms.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontFamily: 'inter',
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

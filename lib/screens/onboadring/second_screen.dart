@@ -47,7 +47,6 @@ class SecondScreen extends StatelessWidget {
                     height: 64,
                     width: 96,
                     child: CountryCodePicker(
-                      dialogSize: Size(20, 20),
                       flagDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(2),
                       ),
@@ -74,7 +73,6 @@ class SecondScreen extends StatelessWidget {
                     child: TextField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
-
                         hint: Text(
                           '(555) 000-0000',
                           style: TextStyle(
@@ -92,7 +90,7 @@ class SecondScreen extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: 20,
+          left: 22,
           top: 290,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
