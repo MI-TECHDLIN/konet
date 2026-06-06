@@ -3,12 +3,18 @@ import 'package:konet/screens/chat_screen.dart';
 import 'package:konet/screens/login_screen.dart';
 import 'package:konet/screens/registration_screen.dart';
 import 'package:konet/screens/welcome_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(KonetApp());
 }
 
 class KonetApp extends StatefulWidget {
+  const KonetApp({super.key});
+
   @override
   State<KonetApp> createState() => _KonetAppState();
 }
