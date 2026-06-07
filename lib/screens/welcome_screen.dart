@@ -17,12 +17,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   PageController pageController = PageController();
 
-  final List<Widget> _pages = [
-    FirstScreen(),
-    SecondScreen(),
-    ThirdScreen(),
-    LastScreen(),
-  ];
+  List _pages = [FirstScreen(), SecondScreen(), ThirdScreen(), LastScreen()];
   int currentslide = 0;
   int get totalslide => _pages.length;
   bool nextslide = false;
@@ -105,7 +100,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   child: PageView(
                     controller: pageController,
                     onPageChanged: (value) => pagecall(context, value),
-                    children: _pages,
+                    children: _pages as List<Widget>,
                   ),
                 ),
                 SizedBox(height: 10),
@@ -132,7 +127,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'By continuing, you agree to our quiet terms.',
+                  _pages == _pages[0]
+                      ? 'By continuing, you agree to our quiet terms.'
+                      : '',
                   style: TextStyle(
                     fontWeight: FontWeight.w300,
                     fontFamily: 'inter',
