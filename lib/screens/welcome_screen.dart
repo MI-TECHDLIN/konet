@@ -1,11 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/screens/onboadring/first_screen.dart';
 import 'package:konet/screens/onboadring/last_screen.dart';
 import 'package:konet/screens/onboadring/second_screen.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:konet/screens/onboadring/third_screen.dart';
-import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -18,20 +16,13 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   PageController pageController = PageController();
-  final _auth = FirebaseAuth.instance;
-  List<Widget> _pages = [
-    FirstScreen(),
-    SecondScreen(),
-    ThirdScreen(),
-    LastScreen(),
-  ];
 
-  List<String> btn_text = ['get started', 'continue', 'verify', 'finish'];
+  List _pages = [FirstScreen(), SecondScreen(), ThirdScreen(), LastScreen()];
   int currentslide = 0;
   int get totalslide => _pages.length;
   bool nextslide = false;
   bool get isFirstslide => currentslide == 0;
-  bool get isLastslide => currentslide == totalslide - 3;
+  bool get isLastslide => currentslide == totalslide - 1;
 
   void pagecall(BuildContext context, int slide) {
     setState(() {
@@ -42,6 +33,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void nextslidefunc({bool nextslide = true}) {
     setState(() {
       if (isFirstslide && !isLastslide) {
+        currentslide++;
+      } else if (!isFirstslide && !isLastslide) {
         currentslide++;
       } else {
         currentslide;
@@ -57,9 +50,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(_pages);
-    print('lastslide:${isLastslide}');
-    print('currentslide:${currentslide}');
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xffF6F5F1),
@@ -100,46 +90,51 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            child: Stack(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 620.5,
+                  height: 568.5,
                   width: 375,
                   child: PageView(
                     controller: pageController,
                     onPageChanged: (value) => pagecall(context, value),
-                    children: _pages,
+                    children: _pages as List<Widget>,
                   ),
                 ),
-
-                Positioned(
-                  bottom: 0,
-                  left: 20,
-                  child: !isLastslide
-                      ? Column(
-                          children: [
-                            page_btn(btn_text[currentslide], () {
-                              nextslidefunc();
-                            }),
-
-                            SizedBox(height: 18),
-                            Text(
-                              'By continuing, you agree to our quiet terms.'
-                              '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontFamily: 'inter',
-                              ),
-                            ),
-                          ],
-                        )
-                      : Text(''),
+                SizedBox(height: 10),
+                SizedBox(
+                  height: 56,
+                  width: 327,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(18),
+                        ),
+                      ),
+                      backgroundColor: WidgetStatePropertyAll(
+                        Color(0xff4F46E5),
+                      ),
+                    ),
+                    onPressed: () => nextslidefunc(),
+                    child: Text(
+                      'get started',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
                 ),
-                // Positioned(
-                //   bottom: 0,
-                //   left: 58,
-                //   child:
-                // ),
+                SizedBox(height: 20),
+                Text(
+                  _pages == _pages[0]
+                      ? 'By continuing, you agree to our quiet terms.'
+                      : '',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontFamily: 'inter',
+                  ),
+                ),
               ],
             ),
           ),
