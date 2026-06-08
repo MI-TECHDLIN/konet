@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
 class ThirdScreen extends StatelessWidget {
   const ThirdScreen({super.key});
@@ -164,6 +165,8 @@ class ThirdScreen extends StatelessWidget {
             ],
           ),
         ),
+
+        Positioned(child: page_btn('continue', () async {})),
       ],
     );
   }
