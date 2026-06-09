@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/routes.dart';
 import 'package:konet/screens/chat_screen.dart';
 import 'package:konet/screens/login_screen.dart';
 import 'package:konet/screens/registration_screen.dart';
@@ -31,15 +32,6 @@ class KonetApp extends StatefulWidget {
 class _KonetAppState extends State<KonetApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: WelcomeScreen.welcomeScreenId,
-      routes: {
-        WelcomeScreen.welcomeScreenId: (ctx) => WelcomeScreen(),
-        RegistrationScreen.registrationScreenId: (ctx) => RegistrationScreen(),
-        LoginScreen.loginId: (ctx) => LoginScreen(),
-        ChatScreen.chatScreenId: (ctx) => ChatScreen(),
-      },
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: Routes());
   }
 }

@@ -18,7 +18,6 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   PageController pageController = PageController();
-  final _auth = FirebaseAuth.instance;
   List<Widget> _pages = [
     FirstScreen(),
     SecondScreen(),

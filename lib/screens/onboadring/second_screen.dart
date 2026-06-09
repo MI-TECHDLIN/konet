@@ -1,5 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/screens/onboadring/third_screen.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
 class SecondScreen extends StatefulWidget {
@@ -10,6 +12,47 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
+  final _auth = FirebaseAuth.instance;
+
+  void verify_num() async {
+    try {
+      await _auth.verifyPhoneNumber(
+        forceResendingToken: null,
+        timeout: Duration(seconds: 60),
+        phoneNumber: '+2349130961180',
+        verificationCompleted: (PhoneAuthCredential credentials) async {
+          print('verification-completed');
+
+          await _auth.signInWithCredential(credentials);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          ScaffoldMessenger(
+            child: SnackBar(content: Text(e.message.toString())),
+          );
+          print('verification-failed');
+          print('error code: ${e.code}');
+        },
+
+        codeSent: (String verificationId, int? reftoken) async {
+          print(verificationId);
+          print(reftoken);
+          //  wait for the user to enter the SMS code and Update this UI
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (co) => ThirdScreen()),
+          );
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // Auto-resolution timed out...
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger(child: SnackBar(content: Text(e.message.toString())));
+    } catch (e) {
+      ScaffoldMessenger(child: SnackBar(content: Text(e.toString())));
+    }
+  }
+
   String countrycode = '+234';
   TextEditingController number_controller = TextEditingController();
 
@@ -139,7 +182,7 @@ class _SecondScreenState extends State<SecondScreen> {
         Positioned(
           bottom: 38,
           left: 20,
-          child: page_btn('continue', () async {}),
+          child: page_btn('continue', verify_num),
         ),
       ],
     );
