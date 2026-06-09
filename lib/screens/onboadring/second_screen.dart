@@ -1,8 +1,24 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
-class SecondScreen extends StatelessWidget {
-  const SecondScreen({super.key});
+class SecondScreen extends StatefulWidget {
+  SecondScreen({super.key});
+
+  @override
+  State<SecondScreen> createState() => _SecondScreenState();
+}
+
+class _SecondScreenState extends State<SecondScreen> {
+  String countrycode = '+234';
+  TextEditingController number_controller = TextEditingController();
+
+  void countrycodePicker(CountryCode code) {
+    setState(() {
+      var codec = code.toString() + number_controller.text;
+      countrycode = codec;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +67,7 @@ class SecondScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(2),
                       ),
                       flagWidth: 40,
-                      onChanged: print,
+                      onChanged: countrycodePicker,
                       initialSelection: 'NIG',
                       favorite: ['+234', 'NIG'],
                       showCountryOnly: false,
@@ -71,6 +87,8 @@ class SecondScreen extends StatelessWidget {
                     height: 64,
                     width: 203,
                     child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: number_controller,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hint: Text(
@@ -117,6 +135,11 @@ class SecondScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        Positioned(
+          bottom: 38,
+          left: 20,
+          child: page_btn('continue', () async {}),
         ),
       ],
     );

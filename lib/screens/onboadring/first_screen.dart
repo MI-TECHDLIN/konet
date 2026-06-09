@@ -22,9 +22,8 @@ class FirstScreen extends StatelessWidget {
         ),
 
         Positioned(
-          left: 55,
-          top: 130,
-
+          left: 50,
+          top: 128,
           child: SizedBox(
             height: 60,
             width: 260,
@@ -41,7 +40,7 @@ class FirstScreen extends StatelessWidget {
         ),
 
         Positioned(
-          top: 270,
+          top: 250,
           left: 20,
           child: Column(
             children: [
