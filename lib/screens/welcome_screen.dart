@@ -1,15 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/screens/onboadring/first_screen.dart';
 import 'package:konet/screens/onboadring/last_screen.dart';
 import 'package:konet/screens/onboadring/second_screen.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:konet/screens/onboadring/third_screen.dart';
-import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
-
+  WelcomeScreen({super.key});
+  int current_slide = 0;
   static const welcomeScreenId = '/';
 
   @override
@@ -18,19 +16,31 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   PageController pageController = PageController();
-  List<Widget> _pages = [
-    FirstScreen(),
-    SecondScreen(),
-    ThirdScreen(),
-    LastScreen(),
+
+  void nextslidefunc() {
+    setState(() {
+      if (!isLastslide) {
+        pageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        print('this is a current : $currentslide slide');
+      }
+    });
+  }
+
+  List<Widget> get _pages => [
+    FirstScreen(onpress: nextslidefunc),
+    SecondScreen(onpress: nextslidefunc),
+    ThirdScreen(onpress: nextslidefunc),
+    LastScreen(onpress: nextslidefunc),
   ];
 
-  List<String> btn_text = ['get started', 'continue', 'verify', 'finish'];
   int currentslide = 0;
   int get totalslide => _pages.length;
   bool nextslide = false;
   bool get isFirstslide => currentslide == 0;
-  bool get isLastslide => currentslide == totalslide - 3;
+  bool get isLastslide => currentslide == totalslide - 1;
 
   void pagecall(BuildContext context, int slide) {
     setState(() {
@@ -38,27 +48,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
-  void nextslidefunc({bool nextslide = true}) {
-    setState(() {
-      if (isFirstslide && !isLastslide) {
-        currentslide++;
-      } else {
-        currentslide;
-      }
-    });
-
-    pageController.animateToPage(
-      currentslide,
-      duration: Duration(milliseconds: 10),
-      curve: Curves.ease,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     print(_pages);
-    print('lastslide:${isLastslide}');
-    print('currentslide:${currentslide}');
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xffF6F5F1),
@@ -111,29 +104,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
 
-                Positioned(
-                  bottom: 0,
-                  left: 20,
-                  child: !isLastslide
-                      ? Column(
-                          children: [
-                            page_btn(btn_text[currentslide], () {
-                              nextslidefunc();
-                            }),
-
-                            SizedBox(height: 18),
-                            Text(
-                              'By continuing, you agree to our quiet terms.'
-                              '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontFamily: 'inter',
-                              ),
-                            ),
-                          ],
-                        )
-                      : Text(''),
-                ),
                 // Positioned(
                 //   bottom: 0,
                 //   left: 58,

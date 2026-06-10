@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:konet/constant/constant.dart';
 import 'package:konet/screens/onboadring/widgets/o_widgets.dart';
+import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
-class FirstScreen extends StatelessWidget {
-  const FirstScreen({super.key});
+class FirstScreen extends StatefulWidget {
+  FirstScreen({required this.onpress});
 
+  VoidCallback onpress;
+
+  @override
+  State<FirstScreen> createState() => _FirstScreenState();
+}
+
+class _FirstScreenState extends State<FirstScreen> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -62,6 +71,28 @@ class FirstScreen extends StatelessWidget {
                       'No read reciepts, no typing indicators.',
                     ),
                   ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Positioned(
+          bottom: 0,
+          left: 20,
+          child: Column(
+            children: [
+              page_btn(btn_text[0], () {
+                widget.onpress();
+              }),
+
+              SizedBox(height: 18),
+              Text(
+                'By continuing, you agree to our quiet terms.'
+                '',
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontFamily: 'inter',
                 ),
               ),
             ],

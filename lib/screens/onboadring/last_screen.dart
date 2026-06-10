@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:konet/constant/constant.dart';
+import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 import 'package:konet/screens/onboadring/widgets/reusablecustom_avater.dart';
 
 enum avaterlist { first, second, third, fourth, fifth, sixth }
 
 class LastScreen extends StatefulWidget {
-  const LastScreen({super.key});
+  LastScreen({required this.onpress});
+  VoidCallback onpress;
 
   @override
   State<LastScreen> createState() => _LastScreenState();
@@ -220,6 +223,17 @@ class _LastScreenState extends State<LastScreen> {
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          left: 20,
+          child: Column(
+            children: [
+              page_btn(btn_text[1], () {
+                widget.onpress();
+              }),
             ],
           ),
         ),

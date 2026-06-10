@@ -12,13 +12,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseAuth.instance.userChanges().listen((User? user) {
-    if (user == null) {
-      print('this user does not havea acoount');
-    } else {
-      print('Loggged in');
-    }
-  });
+  // FirebaseAuth.instance.userChanges().listen((User? user) {
+  //   if (user == null) {
+  //     print('this user does not havea acoount');
+  //   } else {
+  //     print('Loggged in');
+  //   }
+  // });
   runApp(KonetApp());
 }
 
