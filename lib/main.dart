@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:konet/routes.dart';
 import 'package:konet/screens/chat_screen.dart';
 import 'package:konet/screens/login_screen.dart';
-import 'package:konet/screens/registration_screen.dart';
-import 'package:konet/screens/welcome_screen.dart';
+import 'package:konet/screens/onboadring/registration_screen.dart';
+import 'package:konet/screens/onboadring/registration_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:konet/screens/onboadring/last_screen.dart';
+
+enum avaterlist { first, second, third, fourth, fifth, sixth }
 
 Widget reusablecustomavatar({
   avaterlist? avater,
