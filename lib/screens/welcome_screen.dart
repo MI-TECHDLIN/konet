@@ -3,7 +3,6 @@ import 'package:konet/screens/onboadring/first_screen.dart';
 import 'package:konet/screens/onboadring/last_screen.dart';
 import 'package:konet/screens/onboadring/second_screen.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:konet/screens/onboadring/third_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   WelcomeScreen({super.key});
@@ -32,7 +31,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   List<Widget> get _pages => [
     FirstScreen(onpress: nextslidefunc),
     SecondScreen(onpress: nextslidefunc),
-    ThirdScreen(onpress: nextslidefunc),
     LastScreen(onpress: nextslidefunc),
   ];
 

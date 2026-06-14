@@ -2,7 +2,6 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/constant/constant.dart';
-import 'package:konet/screens/onboadring/third_screen.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
 class SecondScreen extends StatefulWidget {
@@ -14,10 +13,12 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  final _auth = FirebaseAuth.instance;
   TextEditingController _email_controller = TextEditingController();
+  TextEditingController _password_controller = TextEditingController();
 
-  void sign_upser() async {
+  bool _finished = false;
+  //signup funtion
+  void _sign_upser() async {
     // // var acs=ActionCodeSettings(url: ,
     // linkDomain: '',
     // androidInstallApp: true,
@@ -25,10 +26,10 @@ class _SecondScreenState extends State<SecondScreen> {
 
     // )
     try {
-      await _auth.signInWithEmailAndPassword(
-        email: 'ezechukwumiracle52@gmail.com',
-        password: 'ppppppp',
-      );
+      // await _auth.signInWithEmailAndPassword(
+      //   email: 'ezechukwumiracle52@gmail.com',
+      //   password: 'ppppppp',
+      // );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger(child: SnackBar(content: Text(e.message.toString())));
     } catch (e) {
@@ -38,7 +39,76 @@ class _SecondScreenState extends State<SecondScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    Widget password_log = Stack(
+      children: [
+        Positioned(
+          top: 30,
+          left: 15,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              const Text(
+                'choose password',
+                style: TextStyle(fontFamily: 'InstrumentSerif', fontSize: 57),
+              ),
+
+              const Text(
+                'make it strong and unique.',
+                style: TextStyle(fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
+        ),
+
+        Positioned(
+          bottom: 400,
+          left: 15,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+            decoration: BoxDecoration(
+              color: Color(0xffFFFFFF),
+
+              borderRadius: BorderRadius.circular(16),
+            ),
+            height: 55,
+            width: 100,
+            child: TextField(
+              obscureText: true,
+              obscuringCharacter: '.',
+              controller: _password_controller,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hint: const Text(
+                  '.........',
+                  style: TextStyle(
+                    color: Color(0xff6B7280),
+                    fontSize: 20,
+                    wordSpacing: 3.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          left: 20,
+          child: Column(
+            children: [
+              page_btn(btn_text[1], () {
+                print('this is email ${_email_controller.text}');
+                print('this is password ${_password_controller.text}');
+                widget.onpress();
+              }),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    Widget email_log = Stack(
       children: [
         Positioned(
           top: 20,
@@ -46,7 +116,7 @@ class _SecondScreenState extends State<SecondScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'your email',
                 style: TextStyle(fontFamily: 'InstrumentSerif', fontSize: 48),
               ),
@@ -54,7 +124,7 @@ class _SecondScreenState extends State<SecondScreen> {
               SizedBox(
                 height: 80,
                 width: 300,
-                child: Text(
+                child: const Text(
                   "we'll use this to secure your account.",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
                 ),
@@ -83,7 +153,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       controller: _email_controller,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hint: Text(
+                        hint: const Text(
                           'email@examplecom',
                           style: TextStyle(
                             color: Color(0xff6B7280),
@@ -106,7 +176,7 @@ class _SecondScreenState extends State<SecondScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'i',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
@@ -116,7 +186,7 @@ class _SecondScreenState extends State<SecondScreen> {
               SizedBox(width: 10),
               Column(
                 children: [
-                  Text(
+                  const Text(
                     'We never share your email with anyone.',
                     style: TextStyle(color: Color(0xff6B7280)),
                   ),
@@ -131,12 +201,15 @@ class _SecondScreenState extends State<SecondScreen> {
           child: Column(
             children: [
               page_btn(btn_text[1], () {
-                widget.onpress();
+                setState(() {
+                  _finished = true;
+                });
               }),
             ],
           ),
         ),
       ],
     );
+    return _finished == true ? password_log : email_log;
   }
 }

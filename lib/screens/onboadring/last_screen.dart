@@ -30,12 +30,12 @@ class _LastScreenState extends State<LastScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'you',
                 style: TextStyle(fontSize: 50, fontFamily: 'InstrumentSerif'),
               ),
               SizedBox(height: 5),
-              Text(
+              const Text(
                 'how should people see you?',
                 style: TextStyle(fontWeight: FontWeight.w300),
               ),
@@ -191,7 +191,7 @@ class _LastScreenState extends State<LastScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
+                child: const Text(
                   'YOUR  USERNAME',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -210,7 +210,7 @@ class _LastScreenState extends State<LastScreen> {
                   decoration: InputDecoration(
                     hint: Container(
                       margin: EdgeInsets.only(left: 30),
-                      child: Text(
+                      child: const Text(
                         'Alex Rivers',
                         style: TextStyle(
                           color: Color(0x826B7280),
