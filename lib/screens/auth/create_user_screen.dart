@@ -6,7 +6,7 @@ import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 enum avaterlist { first, second, third, fourth, fifth, sixth }
 
 class CreateUserScreen extends StatefulWidget {
-  CreateUserScreen({super.key});
+  const CreateUserScreen({super.key});
 
   @override
   State<CreateUserScreen> createState() => _CreateUserScreenState();
@@ -64,12 +64,14 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
     }
   }
 
-  //TODO: tried implementing a displayname function noticed that firebase does not await updatedisplayname func
-  // void profilenaming(String name) async {
-  //   final user = _auth.currentUser;
+  void updatedisplayname() {
+    //TODO: tried implementing a displayname function noticed that firebase does not await updatedisplayname func
+    // void profilenaming(String name) async {
+    final user = _auth.currentUser;
 
-  //   user!.updateDisplayName('miracle');
-  // }
+    user!.updateDisplayName('miracle');
+    // }
+  }
 
   Widget screen_func({
     required Widget firststate,
@@ -90,8 +92,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+    // Twr.dispose();
     // profilenaming(_usernamecontroller.text);
   }
 
@@ -160,6 +161,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
             children: [
               page_btn(btn_text[1], () {
                 setState(() {
+                  createUSer(_email_controller.text, _password_controller.text);
                   _screen_index++;
                 });
               }),
@@ -485,7 +487,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
           child: Column(
             children: [
               page_btn(btn_text[1], () {
-                createUSer(_email_controller.text, _password_controller.text);
+                updatedisplayname();
               }),
             ],
           ),
