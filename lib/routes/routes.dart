@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/constant/constant.dart';
-import 'package:konet/screens/auth/create_user_screen.dart';
 import 'package:konet/screens/messaging/inbox_screen.dart';
 import 'package:konet/screens/onboadring/registration_screen.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
@@ -36,6 +35,7 @@ class _RoutesState extends State<Routes> {
     // }
   }
 
+  //reusable avatar
   Widget reusablecustomavatar({
     avaterlist? avater,
     avaterlist avaterstate = avaterlist.first,
@@ -71,6 +71,7 @@ class _RoutesState extends State<Routes> {
     Color(0xffFF99AC),
     Color(0xffFF6A88),
   ];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -86,7 +87,7 @@ class _RoutesState extends State<Routes> {
       body: StreamBuilder(
         stream: _auth.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data!.displayName == null) {
             return Stack(
               children: [
                 Positioned(
@@ -320,7 +321,7 @@ class _RoutesState extends State<Routes> {
                       page_btn(btn_text[1], () {
                         updatedisplayname(_usernamecontroller.text);
 
-                        Future.delayed(const Duration(seconds: 1)).then((v) {
+                        Future.delayed(const Duration(seconds: 2)).then((v) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (c) => InboxScreen()),
@@ -332,6 +333,8 @@ class _RoutesState extends State<Routes> {
                 ),
               ],
             );
+          } else if (snapshot.hasData && snapshot.data!.displayName != null) {
+            return InboxScreen();
           } else {
             return RegistrationScreen();
           }
