@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -8,20 +9,39 @@ class InboxScreen extends StatefulWidget {
   State<InboxScreen> createState() => _InboxScreenState();
 }
 
-Stream<String?> getDisplayNameStream() {
-  return FirebaseAuth.instance.userChanges().map((User? user) {
-    if (user == null) {
-      print('User is currently signed out.');
-      return null;
-    }
-
-    final String? displayname = user.displayName;
-    print('This is the display name: $displayname');
-    return displayname;
-  });
-}
-
 class _InboxScreenState extends State<InboxScreen> {
+  final _authinbox = FirebaseAuth.instance;
+  final _cloudmessage = FirebaseFirestore.instance;
+
+  Stream<String?> getDisplayNameStream() {
+    return _authinbox.userChanges().map((User? user) {
+      if (user == null) {
+        print('User is currently signed out.');
+        return null;
+      }
+
+      final String? displayname = user.displayName;
+      print('This is the display name: $displayname');
+      return displayname;
+    });
+  }
+
+  sendMEssage(String nuggets) async {
+    await _cloudmessage.collection('messages').add({
+      'sender': _authinbox.currentUser!.email,
+      'text': nuggets,
+    });
+  }
+
+  String? messagetext;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    sendMEssage('do you have money');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
