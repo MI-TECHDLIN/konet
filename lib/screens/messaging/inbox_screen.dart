@@ -8,16 +8,39 @@ class InboxScreen extends StatefulWidget {
   State<InboxScreen> createState() => _InboxScreenState();
 }
 
+Stream<String?> getDisplayNameStream() {
+  return FirebaseAuth.instance.userChanges().map((User? user) {
+    if (user == null) {
+      print('User is currently signed out.');
+      return null;
+    }
+
+    final String? displayname = user.displayName;
+    print('This is the display name: $displayname');
+    return displayname;
+  });
+}
+
 class _InboxScreenState extends State<InboxScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  late final User? _user = _auth.currentUser;
-
-  late String? _displayname = _user!.displayName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('$_displayname:this is display name')),
+      body: Center(
+        child: StreamBuilder<String?>(
+          stream: getDisplayNameStream(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+
+            if (snapshot.hasData && snapshot.data != null) {
+              return Text('Welcome, ${snapshot.data}');
+            } else {
+              return const Text('No Display Name Set');
+            }
+          },
+        ),
+      ),
     );
   }
 }
