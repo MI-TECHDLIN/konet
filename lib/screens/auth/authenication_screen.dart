@@ -14,7 +14,6 @@ class _AuthenicationScreenState extends State<AuthenicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF6F5F1),
       body: SafeArea(
         child: Stack(
           children: [

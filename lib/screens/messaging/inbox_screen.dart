@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -45,32 +46,57 @@ class _InboxScreenState extends State<InboxScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: null, icon: Icon(Icons.arrow_back_ios)),
+      backgroundColor: Color(0xffF6F5F1),
 
-        title: Container(
-          child: Row(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9999),
-                  gradient: LinearGradient(
-                    colors: [Color(0xff84FAB0), Color(0xff8FD3F4)],
+      appBar: AppBar(
+        elevation: 5,
+        surfaceTintColor: Color.fromARGB(255, 219, 218, 214),
+        backgroundColor: Color(0xffF6F5F1),
+
+        // shadowColor: Color(0xffF6F5F1),
+        toolbarHeight: 70,
+        leading: Container(
+          padding: EdgeInsets.all(8.0),
+          margin: EdgeInsets.only(left: 20),
+          child: IconButton(
+            onPressed: null,
+            icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 21),
+          ),
+        ),
+
+        title: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 6),
+              padding: EdgeInsets.all(8.0),
+
+              alignment: Alignment.center,
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(9999),
+                gradient: LinearGradient(
+                  colors: [Color(0xff84FAB0), Color(0xff8FD3F4)],
+                ),
+              ),
+              child: Image.asset('assets/image/profile.png', scale: 2.0),
+            ),
+            SizedBox(width: 13),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('sarah', style: TextStyle(fontWeight: FontWeight.w700)),
+                Text(
+                  'online',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15,
+                    color: Color(0xff9CA3AF),
                   ),
                 ),
-                child: Image.asset('assets/image/profile.png', scale: 2.0),
-              ),
-              Column(
-                children: [
-                  Text('sarah', style: TextStyle(fontWeight: FontWeight.w500)),
-                  Text('online'),
-                ],
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
 
