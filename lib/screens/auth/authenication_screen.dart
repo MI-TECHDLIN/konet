@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:konet/screens/auth/create_user_screen.dart';
-import 'package:konet/screens/auth/login_user.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
 class AuthenicationScreen extends StatefulWidget {
-  AuthenicationScreen({required this.signin, required this.signup});
+  AuthenicationScreen({super.key, required this.signin, required this.signup});
   VoidCallback signup;
   VoidCallback signin;
 

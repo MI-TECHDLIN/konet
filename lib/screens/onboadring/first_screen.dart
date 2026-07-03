@@ -4,7 +4,7 @@ import 'package:konet/screens/onboadring/widgets/o_widgets.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
 class FirstScreen extends StatefulWidget {
-  FirstScreen({required this.onpress});
+  FirstScreen({super.key, required this.onpress});
 
   VoidCallback onpress;
 

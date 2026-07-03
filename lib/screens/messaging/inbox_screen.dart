@@ -39,13 +39,42 @@ class _InboxScreenState extends State<InboxScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    sendMEssage('do you have money');
+    sendMEssage('uba kosi');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        leading: IconButton(onPressed: null, icon: Icon(Icons.arrow_back_ios)),
+
+        title: Container(
+          child: Row(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(9999),
+                  gradient: LinearGradient(
+                    colors: [Color(0xff84FAB0), Color(0xff8FD3F4)],
+                  ),
+                ),
+                child: Image.asset('assets/image/profile.png', scale: 2.0),
+              ),
+              Column(
+                children: [
+                  Text('sarah', style: TextStyle(fontWeight: FontWeight.w500)),
+                  Text('online'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      body: SafeArea(
         child: StreamBuilder<String?>(
           stream: getDisplayNameStream(),
           builder: (context, snapshot) {
@@ -54,7 +83,7 @@ class _InboxScreenState extends State<InboxScreen> {
             }
 
             if (snapshot.hasData && snapshot.data != null) {
-              return Text('Welcome, ${snapshot.data}');
+              return Column(children: []);
             } else {
               return const Text('No Display Name Set');
             }
