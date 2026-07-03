@@ -83,6 +83,7 @@ class _WelcomeScreenState extends State<RegistrationScreen> {
       backgroundColor: Color(0xffF6F5F1),
 
       appBar: AppBar(
+        titleSpacing: 30,
         backgroundColor: Color(0xffF6F5F1),
         title: Container(
           margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
