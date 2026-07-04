@@ -15,6 +15,7 @@ class _InboxScreenState extends State<InboxScreen> {
   String? _displayname = 'User 01';
 
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
+  int? _responseint;
   //functions
   Stream<String?> _getDisplayNameStream() {
     return _authinbox.userChanges().map((User? user) {
@@ -37,14 +38,15 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 
   Future<void> _messageResponse() async {
-    _response = _cloudmessage
+    final _response = _cloudmessage
         .collection('messages')
         .snapshots()
         .map((snap) => snap.docs);
 
     await for (List<QueryDocumentSnapshot> docs in _response!) {
       print('New Update');
-
+      final Future<int> length = _response.length;
+      _responseint = await length;
       // This loops through each individual document in the current list
       for (final doc in docs) {
         final data = doc.data() as Map<String, dynamic>;
@@ -60,6 +62,7 @@ class _InboxScreenState extends State<InboxScreen> {
     // TODO: implement initState
     super.initState();
     sendMEssage('uba kosi');
+    _messageResponse();
   }
 
   @override
@@ -136,7 +139,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 itemBuilder: (ctx, ind) {
                   return Container(child: Text(''));
                 },
-                itemCount: _response!.length as int,
+                itemCount: _responseint,
               );
             } else {
               return const Text('No Display Name Set');
