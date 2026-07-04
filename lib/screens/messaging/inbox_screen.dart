@@ -16,6 +16,7 @@ class _InboxScreenState extends State<InboxScreen> {
 
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
   int? _responseint;
+  List<Map<String, dynamic>> data = [];
   //functions
   Stream<String?> _getDisplayNameStream() {
     return _authinbox.userChanges().map((User? user) {
@@ -38,19 +39,23 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 
   Future<void> _messageResponse() async {
-    final _response = _cloudmessage
+    _response = _cloudmessage
         .collection('messages')
         .snapshots()
         .map((snap) => snap.docs);
 
     await for (List<QueryDocumentSnapshot> docs in _response!) {
       print('New Update');
-      final Future<int> length = _response.length;
-      _responseint = await length;
+
+      //length for all response
+      _responseint = docs.length;
+
+      data.clear();
       // This loops through each individual document in the current list
       for (final doc in docs) {
-        final data = doc.data() as Map<String, dynamic>;
-        print('Message ID: ${doc.id}, Content: ${data['text']}');
+        final datum = doc.data() as Map<String, dynamic>;
+        print('Message ID: ${doc.id}, Content: ${datum['text']}');
+        data.add(datum);
       }
     }
   }
@@ -61,7 +66,7 @@ class _InboxScreenState extends State<InboxScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    sendMEssage('uba kosi');
+    sendMEssage('do you have money');
     _messageResponse();
   }
 
@@ -137,7 +142,25 @@ class _InboxScreenState extends State<InboxScreen> {
             if (snapshot.hasData && snapshot.data != null) {
               return ListView.builder(
                 itemBuilder: (ctx, ind) {
-                  return Container(child: Text(''));
+                  return Container(
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.fromLTRB(126.61, 0, 16, 10),
+                    height: 110.25,
+                    width: 274.39,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(24),
+
+                        bottomLeft: Radius.circular(24),
+                        topLeft: Radius.circular(24),
+                      ),
+                      color: Color(0xff4F46E5),
+                    ),
+                    child: Text(
+                      data[ind]['text'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
                 },
                 itemCount: _responseint,
               );
