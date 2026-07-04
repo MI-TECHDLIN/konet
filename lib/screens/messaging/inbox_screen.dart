@@ -38,11 +38,18 @@ class _InboxScreenState extends State<InboxScreen> {
     });
   }
 
+  // TODO: modify functions in a way it getts message based on user id not a globsl fetching
   Future<void> _messageResponse() async {
     _response = _cloudmessage
         .collection('messages')
         .snapshots()
         .map((snap) => snap.docs);
+
+    '''
+message response is using a stream sequence 
+to get snapshots from firestore for updates and to get documents stored
+
+''';
 
     await for (List<QueryDocumentSnapshot> docs in _response!) {
       print('New Update');
@@ -51,6 +58,7 @@ class _InboxScreenState extends State<InboxScreen> {
       _responseint = docs.length;
 
       data.clear();
+
       // This loops through each individual document in the current list
       for (final doc in docs) {
         final datum = doc.data() as Map<String, dynamic>;
@@ -132,8 +140,8 @@ class _InboxScreenState extends State<InboxScreen> {
       ),
 
       body: SafeArea(
-        child: StreamBuilder<String?>(
-          stream: _getDisplayNameStream(),
+        child: StreamBuilder<QuerySnapshot?>(
+          stream: _cloudmessage.collection('messages').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -144,7 +152,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 itemBuilder: (ctx, ind) {
                   return Container(
                     padding: EdgeInsets.all(16),
-                    margin: EdgeInsets.fromLTRB(126.61, 0, 16, 10),
+                    margin: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
                     height: 110.25,
                     width: 274.39,
                     decoration: BoxDecoration(
@@ -165,7 +173,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 itemCount: _responseint,
               );
             } else {
-              return const Text('No Display Name Set');
+              return const Text('No data here');
             }
           },
         ),
