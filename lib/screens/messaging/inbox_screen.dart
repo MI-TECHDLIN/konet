@@ -20,14 +20,12 @@ class _InboxScreenState extends State<InboxScreen> {
   //functions
   Stream<String?> _getDisplayNameStream() {
     return _authinbox.userChanges().map((User? user) {
-      if (user == null) {
-        print('User is currently signed out.');
+      if (user!.displayName != null) {
+        _displayname = user.displayName;
+        return _displayname;
+      } else {
         return null;
       }
-
-      _displayname = user.displayName;
-      print('This is the display name: $_displayname');
-      return _displayname;
     });
   }
 
@@ -74,6 +72,8 @@ to get snapshots from firestore for updates and to get documents stored
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _getDisplayNameStream();
     sendMEssage('do you have money');
     _messageResponse();
   }
@@ -121,9 +121,21 @@ to get snapshots from firestore for updates and to get documents stored
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _displayname!,
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                StreamBuilder(
+                  stream: _getDisplayNameStream(),
+                  builder: (context, asyncSnapshot) {
+                    if (_authinbox.currentUser!.displayName != null) {
+                      return Text(
+                        _displayname!,
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      );
+                    } else {
+                      return Text(
+                        _displayname!,
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      );
+                    }
+                  },
                 ),
                 Text(
                   'online',
@@ -144,10 +156,8 @@ to get snapshots from firestore for updates and to get documents stored
           stream: _cloudmessage.collection('messages').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
-
-            if (snapshot.hasData && snapshot.data != null) {
+              return Center(child: const CircularProgressIndicator());
+            } else if (snapshot.hasData && snapshot.data != null) {
               return ListView.builder(
                 itemBuilder: (ctx, ind) {
                   return Container(
