@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -13,25 +12,45 @@ class InboxScreen extends StatefulWidget {
 class _InboxScreenState extends State<InboxScreen> {
   final _authinbox = FirebaseAuth.instance;
   final _cloudmessage = FirebaseFirestore.instance;
+  String? _displayname = 'User 01';
 
-  Stream<String?> getDisplayNameStream() {
+  Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
+  //functions
+  Stream<String?> _getDisplayNameStream() {
     return _authinbox.userChanges().map((User? user) {
       if (user == null) {
         print('User is currently signed out.');
         return null;
       }
 
-      final String? displayname = user.displayName;
-      print('This is the display name: $displayname');
-      return displayname;
+      _displayname = user.displayName;
+      print('This is the display name: $_displayname');
+      return _displayname;
     });
   }
 
-  sendMEssage(String nuggets) async {
+  Future<void> sendMEssage(String nuggets) async {
     await _cloudmessage.collection('messages').add({
       'sender': _authinbox.currentUser!.email,
       'text': nuggets,
     });
+  }
+
+  Future<void> _messageResponse() async {
+    _response = _cloudmessage
+        .collection('messages')
+        .snapshots()
+        .map((snap) => snap.docs);
+
+    await for (List<QueryDocumentSnapshot> docs in _response!) {
+      print('New Update');
+
+      // This loops through each individual document in the current list
+      for (final doc in docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        print('Message ID: ${doc.id}, Content: ${data['text']}');
+      }
+    }
   }
 
   String? messagetext;
@@ -59,6 +78,7 @@ class _InboxScreenState extends State<InboxScreen> {
           padding: EdgeInsets.all(8.0),
           margin: EdgeInsets.only(left: 20),
           child: IconButton(
+            //TODO: make this button active ones i build the home screen
             onPressed: null,
             icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 21),
           ),
@@ -85,7 +105,10 @@ class _InboxScreenState extends State<InboxScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('sarah', style: TextStyle(fontWeight: FontWeight.w700)),
+                Text(
+                  _displayname!,
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ),
                 Text(
                   'online',
                   style: TextStyle(
@@ -102,14 +125,19 @@ class _InboxScreenState extends State<InboxScreen> {
 
       body: SafeArea(
         child: StreamBuilder<String?>(
-          stream: getDisplayNameStream(),
+          stream: _getDisplayNameStream(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             }
 
             if (snapshot.hasData && snapshot.data != null) {
-              return Column(children: []);
+              return ListView.builder(
+                itemBuilder: (ctx, ind) {
+                  return Container(child: Text(''));
+                },
+                itemCount: _response!.length as int,
+              );
             } else {
               return const Text('No Display Name Set');
             }
