@@ -195,10 +195,11 @@ to get snapshots from firestore for updates and to get documents stored
               ),
               Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.fromLTRB(0, 20, 0, 18),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 width: 343,
-                height: 59,
+                height: 80,
                 child: TextField(
+                  textAlign: TextAlign.values[1],
                   controller: _textcontorlller,
                   onSubmitted: (text) {
                     sendMEssage(_textcontorlller.text);
