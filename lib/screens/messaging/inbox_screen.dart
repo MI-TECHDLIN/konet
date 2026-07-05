@@ -152,40 +152,81 @@ to get snapshots from firestore for updates and to get documents stored
       ),
 
       body: SafeArea(
-        child: StreamBuilder<QuerySnapshot?>(
-          stream: _cloudmessage.collection('messages').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: const CircularProgressIndicator());
-            } else if (snapshot.hasData && snapshot.data != null) {
-              return ListView.builder(
-                itemBuilder: (ctx, ind) {
-                  return Container(
-                    padding: EdgeInsets.all(16),
-                    margin: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
-                    height: 110.25,
-                    width: 274.39,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(24),
+        child: Column(
+          children: [
+            StreamBuilder<QuerySnapshot?>(
+              stream: _cloudmessage.collection('messages').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: const CircularProgressIndicator());
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  return SizedBox(
+                    height: 708,
+                    child: ListView.builder(
+                      itemBuilder: (ctx, ind) {
+                        return Container(
+                          padding: EdgeInsets.all(16),
+                          margin: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
+                          height: 110.25,
+                          width: 274.39,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(24),
 
-                        bottomLeft: Radius.circular(24),
-                        topLeft: Radius.circular(24),
-                      ),
-                      color: Color(0xff4F46E5),
-                    ),
-                    child: Text(
-                      data[ind]['text'],
-                      style: TextStyle(color: Colors.white),
+                              bottomLeft: Radius.circular(24),
+                              topLeft: Radius.circular(24),
+                            ),
+                            color: Color(0xff4F46E5),
+                          ),
+                          child: Text(
+                            data[ind]['text'],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      },
+                      itemCount: _responseint,
                     ),
                   );
-                },
-                itemCount: _responseint,
-              );
-            } else {
-              return const Text('No data here');
-            }
-          },
+                } else {
+                  return const Text('No data here');
+                }
+              },
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 18),
+              width: 343,
+              height: 59,
+              child: TextField(
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hint: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: const Text(
+                          'message',
+                          style: TextStyle(
+                            color: Color(0xFF9CA3AF),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.emoji_emotions_outlined,
+                        color: Color(0xff9CA3AF),
+                      ),
+                    ],
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(9999),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
