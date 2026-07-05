@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:konet/screens/messaging/widget/message_card.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -13,6 +14,8 @@ class _InboxScreenState extends State<InboxScreen> {
   final _textcontorlller = TextEditingController();
   final _authinbox = FirebaseAuth.instance;
   final _cloudmessage = FirebaseFirestore.instance;
+
+  String? get _currentemail => _authinbox.currentUser?.email;
   String? _displayname = 'User 01';
 
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
@@ -66,8 +69,6 @@ to get snapshots from firestore for updates and to get documents stored
       }
     }
   }
-
-  String? messagetext;
 
   @override
   void initState() {
@@ -165,25 +166,26 @@ to get snapshots from firestore for updates and to get documents stored
                       height: 708,
                       child: ListView.builder(
                         itemBuilder: (ctx, ind) {
-                          return Container(
-                            padding: EdgeInsets.all(16),
-                            margin: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
-                            height: 110.25,
-                            width: 274.39,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(24),
+                          return _currentemail == data[ind]['sender']
+                              ? MessageCard(
+                                  messagestring: data[ind]['text'],
 
-                                bottomLeft: Radius.circular(24),
-                                topLeft: Radius.circular(24),
-                              ),
-                              color: Color(0xff4F46E5),
-                            ),
-                            child: Text(
-                              data[ind]['text'],
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          );
+                                  position: EdgeInsets.fromLTRB(
+                                    130.61,
+                                    0,
+                                    16,
+                                    10,
+                                  ),
+                                )
+                              : MessageCard(
+                                  messagestring: data[ind]['text'],
+                                  position: EdgeInsets.fromLTRB(
+                                    16,
+                                    0,
+                                    130.61,
+                                    10,
+                                  ),
+                                );
                         },
                         itemCount: _responseint,
                       ),
@@ -199,14 +201,12 @@ to get snapshots from firestore for updates and to get documents stored
                 width: 343,
                 height: 80,
                 child: TextField(
-                  textAlign: TextAlign.values[1],
                   controller: _textcontorlller,
                   onSubmitted: (text) {
                     sendMEssage(_textcontorlller.text);
                     _textcontorlller.clear();
                   },
                   decoration: InputDecoration(
-                    contentPadding: MediaQuery.viewInsetsOf(context),
                     fillColor: Colors.white,
                     hint: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
