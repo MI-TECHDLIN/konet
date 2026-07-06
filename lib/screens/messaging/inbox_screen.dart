@@ -33,7 +33,7 @@ class _InboxScreenState extends State<InboxScreen> {
     });
   }
 
-  Widget _emptystate = Container(
+  Widget get _emptystate => Container(
     alignment: Alignment.center,
     height: 708,
     child: Column(
@@ -67,7 +67,7 @@ class _InboxScreenState extends State<InboxScreen> {
           24,
 
           messagestring: data[index]['text'],
-
+          calcheight: data[index]['text'],
           position: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
           color: 0xFF4E45F2,
 
@@ -78,6 +78,7 @@ class _InboxScreenState extends State<InboxScreen> {
           0,
 
           messagestring: data[index]['text'],
+          calcheight: data[index]['text'],
           position: EdgeInsets.fromLTRB(16, 0, 130.61, 10),
           color: 0xffEFEEE9,
           textcolor: Colors.black,
