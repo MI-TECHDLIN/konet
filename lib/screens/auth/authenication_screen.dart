@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
+// ignore: must_be_immutable
 class AuthenicationScreen extends StatefulWidget {
   AuthenicationScreen({super.key, required this.signin, required this.signup});
   VoidCallback signup;
@@ -14,6 +15,7 @@ class _AuthenicationScreenState extends State<AuthenicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffF6F5F1),
       body: SafeArea(
         child: Stack(
           children: [
@@ -69,7 +71,7 @@ class _AuthenicationScreenState extends State<AuthenicationScreen> {
                     margin: EdgeInsets.only(top: 25),
                     height: 50,
                     width: 250,
-                    child: Text(
+                    child: const Text(
                       textAlign: TextAlign.center,
                       'By logging in, you agree to our quiet terms and privacy policy',
                     ),
