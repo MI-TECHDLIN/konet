@@ -33,6 +33,56 @@ class _InboxScreenState extends State<InboxScreen> {
     });
   }
 
+  Widget _emptystate = Container(
+    alignment: Alignment.center,
+    height: 708,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('assets/image/emptystateasset.png'),
+        SizedBox(height: 12),
+        Text(
+          'No messages yet',
+          style: TextStyle(
+            letterSpacing: 2,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        SizedBox(height: 8),
+        SizedBox(
+          width: 205,
+          child: Text(
+            'Say hi to $_displayname! Be the first to start the conversation',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Color(0xff8E8E93)),
+          ),
+        ),
+      ],
+    ),
+  );
+  Widget _messagestate(int index) => _currentemail == data[index]['sender']
+      ? MessageCard(
+          0,
+          24,
+
+          messagestring: data[index]['text'],
+
+          position: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
+          color: 0xFF4E45F2,
+
+          textcolor: Colors.white,
+        )
+      : MessageCard(
+          24,
+          0,
+
+          messagestring: data[index]['text'],
+          position: EdgeInsets.fromLTRB(16, 0, 130.61, 10),
+          color: 0xffEFEEE9,
+          textcolor: Colors.black,
+        );
+
   Future<void> sendMEssage(String nuggets) async {
     await _cloudmessage.collection('messages').add({
       'sender': _authinbox.currentUser!.email,
@@ -160,38 +210,32 @@ to get snapshots from firestore for updates and to get documents stored
                 stream: _cloudmessage.collection('messages').snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: const CircularProgressIndicator());
-                  } else if (snapshot.hasData && snapshot.data != null) {
+                    return Center(
+                      child: SizedBox(
+                        height: 708,
+
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.data!.docs.isNotEmpty) {
                     return SizedBox(
                       height: 708,
                       child: ListView.builder(
                         itemBuilder: (ctx, ind) {
-                          return _currentemail == data[ind]['sender']
-                              ? MessageCard(
-                                  messagestring: data[ind]['text'],
-
-                                  position: EdgeInsets.fromLTRB(
-                                    130.61,
-                                    0,
-                                    16,
-                                    10,
-                                  ),
-                                )
-                              : MessageCard(
-                                  messagestring: data[ind]['text'],
-                                  position: EdgeInsets.fromLTRB(
-                                    16,
-                                    0,
-                                    130.61,
-                                    10,
-                                  ),
-                                );
+                          return
+                          //message sorting by email
+                          _messagestate(ind);
                         },
                         itemCount: _responseint,
                       ),
                     );
+                  } else if (snapshot.data!.docs.isEmpty) {
+                    return _emptystate;
                   } else {
-                    return const Text('No data here');
+                    return Text('no data here');
                   }
                 },
               ),
