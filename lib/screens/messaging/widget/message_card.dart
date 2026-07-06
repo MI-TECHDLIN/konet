@@ -33,7 +33,7 @@ there is a default values to increment
     int len_height;
     double calc_height;
     if (calcheight.length <= 35) {
-      calc_height = 45;
+      calc_height = 48;
     } else {
       len_height = calcheight.length;
       calc_height = (len_height * defaultheight) / line;
