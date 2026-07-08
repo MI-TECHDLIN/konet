@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/screens/messaging/widget/thread_selector.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -86,7 +87,9 @@ class _InboxScreenState extends State<InboxScreen> {
       body: Center(
         child: Column(
           children: [
+            //search tab v1
             Container(
+              margin: EdgeInsets.fromLTRB(0, 15, 0, 10),
               height: 50,
 
               width: 327,
@@ -98,7 +101,7 @@ class _InboxScreenState extends State<InboxScreen> {
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: EdgeInsets.only(left: 12),
                     child: Icon(Icons.search, color: Color(0xff9CA3AF)),
                   ),
 
@@ -106,6 +109,12 @@ class _InboxScreenState extends State<InboxScreen> {
                   Text('search', style: TextStyle(color: Color(0xff9CA3AF))),
                 ],
               ),
+            ),
+
+            thread_selector(),
+            Column(children: [
+
+              ],
             ),
           ],
         ),
