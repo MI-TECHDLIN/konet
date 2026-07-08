@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class InboxScreen extends StatefulWidget {
@@ -8,6 +9,41 @@ class InboxScreen extends StatefulWidget {
 }
 
 class _InboxScreenState extends State<InboxScreen> {
+  List data = [];
+  // SearchFieldListItem<SearchModel>? _selectedvalue;
+  // SearchModel _searchModel =SearchModel;
+
+  final _accountinstance = FirebaseFirestore.instance;
+
+  Future<void> get_allusers() async {
+    final users = _accountinstance
+        .collection('messages')
+        .snapshots()
+        .map((snap) => snap.docs);
+
+    await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user
+        in users) {
+      print('new-update');
+
+      for (var doc in user) {
+        final datum = doc.data();
+        print('Message ID: ${doc.id}, Content: ${datum['text']}');
+        data.add(datum['sender']);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // s_emails.map((user) {
+    //   return SearchFieldListItem<SearchModel>(
+    //     key: user.
+    //   );
+    // }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +83,33 @@ class _InboxScreenState extends State<InboxScreen> {
           ),
         ],
       ),
-      body: Column(children: [Container(child: Text(''))]),
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              height: 50,
+
+              width: 327,
+
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Icon(Icons.search, color: Color(0xff9CA3AF)),
+                  ),
+
+                  SizedBox(width: 10),
+                  Text('search', style: TextStyle(color: Color(0xff9CA3AF))),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
