@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/screens/messaging/widget/inbox_card.dart';
 import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
 
@@ -153,66 +154,53 @@ class _InboxScreenState extends State<InboxScreen> {
               ),
             ),
 
-            Container(
-              margin: EdgeInsets.only(top: 30),
-              height: 500,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32),
-                color: Color(0xffFFFFFF),
-              ),
-              width: 343,
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
+            //chat_home;
+            SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.only(top: 30),
+                height: 500,
 
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: 56,
-                              width: 56,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xffF093FB),
-                                    Color(0xffF5576C),
-                                  ],
-                                ),
-                              ),
-                              child: Text(
-                                'JD',
-
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-
-                            Container(
-                              margin: EdgeInsets.only(left: 15),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'james',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text('check out the new designs!'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(32),
+                  color: Color(0xffFFFFFF),
+                ),
+                width: 376,
+                child: Column(
+                  children: [
+                    inbox_card(
+                      grad1: 0xffF093FB,
+                      grad2: 0xffF5576C,
+                      label: 'JD',
+                      displayname: 'James',
+                      newthread: 'Check out the new designs!',
                     ),
-                  ),
-                ],
+
+                    inbox_card(
+                      grad1: 0xffFA709A,
+                      grad2: 0xffFEE140,
+                      label: 'AK',
+                      displayname: 'Aisha',
+                      newthread: 'Sounds good, see you then!',
+                    ),
+                    inbox_card(
+                      grad1: 0xff4FACFE,
+                      grad2: 0xff00F2FE,
+
+                      label: 'RB',
+                      displayname: 'Riley',
+                      newthread: 'Sounds good, see you then!',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
