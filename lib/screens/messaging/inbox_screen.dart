@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
 
 class InboxScreen extends StatefulWidget {
@@ -112,9 +113,105 @@ class _InboxScreenState extends State<InboxScreen> {
             ),
 
             thread_selector(),
-            Column(children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(40, 14, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'PINNED',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff9CA3AF),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      pinned_widget(
+                        text: 'sarah',
+                        grad1: 0xffFF6A88,
+                        grad2: 0xffFF9A8B,
+                      ),
 
-              ],
+                      pinned_widget(
+                        text: 'marcus',
+                        grad1: 0xff84FAB0,
+                        grad2: 0xff8FD3F4,
+                      ),
+
+                      pinned_widget(
+                        text: 'elena',
+                        grad1: 0xffA1C4FD,
+                        grad2: 0xffC2E9FB,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            Container(
+              margin: EdgeInsets.only(top: 30),
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(32),
+                color: Color(0xffFFFFFF),
+              ),
+              width: 343,
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              height: 56,
+                              width: 56,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xffF093FB),
+                                    Color(0xffF5576C),
+                                  ],
+                                ),
+                              ),
+                              child: Text(
+                                'JD',
+
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              margin: EdgeInsets.only(left: 15),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'james',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text('check out the new designs!'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
