@@ -1,7 +1,10 @@
+//TODO: later user of a validatpr checker for users
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/constant/constant.dart';
-import 'package:konet/screens/messaging/inbox_screen.dart';
+import 'package:konet/screens/messaging/chat_screen.dart';
 import 'package:konet/screens/onboadring/registration_screen.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
@@ -15,16 +18,8 @@ class Routes extends StatefulWidget {
 }
 
 class _RoutesState extends State<Routes> {
-  //TODO: later user of a validatpr checker for users
-  //   Future<void> checkuserlogin_stats() async {
+  final _storeibject = FirebaseFirestore.instance;
 
-  //  var validator=  await FirebaseAuth.instance.currentUser!.reload();
-
-  //   if(validator
-  //   !=null){
-
-  //   }
-  //   }
   final TextEditingController _usernamecontroller = TextEditingController();
   void updatedisplayname(String displayname) {
     //TODO: tried implementing a displayname function noticed that firebase does not await updatedisplayname func
@@ -32,7 +27,67 @@ class _RoutesState extends State<Routes> {
     final user = _auth.currentUser;
 
     user!.updateDisplayName(displayname);
-    // }
+  }
+
+  agor_userid() {}
+
+  List _random_generic_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  List random_generic_let = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'l',
+    'k',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+    '0',
+  ];
+
+  Future<void> _store_user() async {
+    var username = _usernamecontroller.text.substring(0, 3);
+
+    _random_generic_num.shuffle();
+    random_generic_let.shuffle();
+
+    var combo =
+        random_generic_let[0] +
+        _random_generic_num[0] +
+        _random_generic_num[1] +
+        _random_generic_num[3] +
+        random_generic_let[4];
+    var config = username + combo;
+    print('this is userid: $config');
+    try {
+      await _storeibject
+          .collection('users')
+          .doc(username)
+          .collection('details')
+          .add({
+            'email': _auth.currentUser?.email,
+            'username': _auth.currentUser?.displayName,
+          });
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger(child: SnackBar(content: Text(e.message.toString())));
+    }
   }
 
   //reusable avatar
@@ -320,7 +375,7 @@ class _RoutesState extends State<Routes> {
                     children: [
                       page_btn(btn_text[1], () {
                         updatedisplayname(_usernamecontroller.text);
-
+                        _store_user();
                         Future.delayed(const Duration(seconds: 2)).then((v) {
                           Navigator.push(
                             context,
