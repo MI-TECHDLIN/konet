@@ -113,6 +113,8 @@ class _InboxScreenState extends State<InboxScreen> {
             ),
 
             thread_selector(),
+
+            //pinned widget
             Container(
               margin: EdgeInsets.fromLTRB(40, 14, 0, 0),
               child: Column(
