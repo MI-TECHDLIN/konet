@@ -129,42 +129,44 @@ class _InboxScreenState extends State<InboxScreen> {
                       color: Color(0xff9CA3AF),
                     ),
                   ),
-                  Row(
-                    children: [
-                      pinned_widget(
-                        text: 'sarah',
-                        grad1: 0xffFF6A88,
-                        grad2: 0xffFF9A8B,
-                      ),
+                  SingleChildScrollView(
+                    child: Row(
+                      children: [
+                        pinned_widget(
+                          text: 'sarah',
+                          grad1: 0xffFF6A88,
+                          grad2: 0xffFF9A8B,
+                        ),
 
-                      pinned_widget(
-                        text: 'marcus',
-                        grad1: 0xff84FAB0,
-                        grad2: 0xff8FD3F4,
-                      ),
+                        pinned_widget(
+                          text: 'marcus',
+                          grad1: 0xff84FAB0,
+                          grad2: 0xff8FD3F4,
+                        ),
 
-                      pinned_widget(
-                        text: 'elena',
-                        grad1: 0xffA1C4FD,
-                        grad2: 0xffC2E9FB,
-                      ),
-                    ],
+                        pinned_widget(
+                          text: 'elena',
+                          grad1: 0xffA1C4FD,
+                          grad2: 0xffC2E9FB,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
 
             //chat_home;
-            SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(top: 30),
-                height: 500,
+            Container(
+              margin: EdgeInsets.only(top: 30),
+              height: 500,
 
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(32),
-                  color: Color(0xffFFFFFF),
-                ),
-                width: 376,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(32),
+                color: Color(0xffFFFFFF),
+              ),
+              width: 376,
+              child: SingleChildScrollView(
                 child: Column(
                   children: [
                     inbox_card(
@@ -189,6 +191,33 @@ class _InboxScreenState extends State<InboxScreen> {
                       label: 'RB',
                       displayname: 'Riley',
                       newthread: 'Sounds good, see you then!',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
                     ),
 
                     inbox_card(
