@@ -1,10 +1,8 @@
-//TODO: later user of a validatpr checker for users
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/constant/constant.dart';
-import 'package:konet/screens/messaging/chat_screen.dart';
+import 'package:konet/screens/messaging/inbox_screen.dart';
 import 'package:konet/screens/onboadring/registration_screen.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
@@ -18,25 +16,14 @@ class Routes extends StatefulWidget {
 }
 
 class _RoutesState extends State<Routes> {
+  //auth
   final _storeibject = FirebaseFirestore.instance;
 
-  final TextEditingController _usernamecontroller = TextEditingController();
+  //variables
   avaterlist avater = avaterlist.first;
-  List<Color> avatarcolor = [
-    Color(0xffFF6A88),
-
-    Color(0xffFF99AC),
-    Color(0xffFF6A88),
-  ];
-
-  void updatedisplayname(String displayname) {
-    //TODO: tried implementing a displayname function noticed that firebase does not await updatedisplayname func
-    // void profilenaming(String name) async {
-    final user = _auth.currentUser;
-
-    user!.updateDisplayName(displayname);
-  }
-
+  var grad1 = 0xffFF6A88;
+  var grad2 = 0xffFF6A88;
+  final TextEditingController _usernamecontroller = TextEditingController();
   List _random_generic_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
   List random_generic_let = [
     'a',
@@ -68,12 +55,21 @@ class _RoutesState extends State<Routes> {
     '0',
   ];
 
+  // functions
+  void updatedisplayname(String displayname) {
+    final user = _auth.currentUser;
+
+    user!.updateDisplayName(displayname);
+
+    // }
+  }
+
   Future<void> _store_user() async {
     var username = _usernamecontroller.text.substring(1, 3);
 
     _random_generic_num.shuffle();
     random_generic_let.shuffle();
-
+    var profile_color = [grad1.toString(), grad2.toString()];
     String combo =
         random_generic_let[0] +
         _random_generic_num[0] +
@@ -90,6 +86,7 @@ class _RoutesState extends State<Routes> {
           .add({
             'email': _auth.currentUser?.email,
             'username': _usernamecontroller.text,
+            'profile-color': profile_color,
           });
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger(child: SnackBar(content: Text(e.message.toString())));
@@ -100,7 +97,8 @@ class _RoutesState extends State<Routes> {
   Widget reusablecustomavatar({
     avaterlist? avater,
     avaterlist avaterstate = avaterlist.first,
-    final List<Color>? color,
+    int? color1,
+    int? color2,
   }) {
     return Container(
       margin: EdgeInsets.only(right: 0),
@@ -119,7 +117,7 @@ class _RoutesState extends State<Routes> {
         width: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(9999),
-          gradient: LinearGradient(colors: color!),
+          gradient: LinearGradient(colors: [Color(color1!), Color(color2!)]),
         ),
       ),
     );
@@ -175,7 +173,9 @@ class _RoutesState extends State<Routes> {
                         width: 132,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(9999),
-                          gradient: LinearGradient(colors: avatarcolor),
+                          gradient: LinearGradient(
+                            colors: [Color(grad1), Color(grad2)],
+                          ),
                         ),
                         child: Image(
                           image: AssetImage('assets/image/profile.png'),
@@ -209,22 +209,16 @@ class _RoutesState extends State<Routes> {
                           setState(() {
                             avater = avaterlist.first;
 
-                            avatarcolor = [
-                              Color(0xffFF6A88),
-
-                              Color(0xffFF99AC),
-                              Color(0xffFF6A88),
-                            ];
+                            grad1 = 0xffFF6A88;
+                            grad2 = 0xFFF94468;
                           });
                         },
                         child: reusablecustomavatar(
                           avater: avater,
                           avaterstate: avaterlist.first,
-                          color: [
-                            Color(0xffFF6A88),
-                            Color(0xffFF99AC),
-                            Color(0xffFF6A88),
-                          ],
+
+                          color1: 0xffFF6A88,
+                          color2: 0xFFF94468,
                         ),
                       ),
 
@@ -233,17 +227,16 @@ class _RoutesState extends State<Routes> {
                         onTap: () {
                           setState(() {
                             avater = avaterlist.second;
-
-                            avatarcolor = [
-                              Color(0xff84FAB0),
-                              Color(0xff8FD3F4),
-                            ];
+                            grad1 = 0xff84FAB0;
+                            grad2 = 0xff8FD3F4;
                           });
                         },
                         child: reusablecustomavatar(
                           avater: avater,
                           avaterstate: avaterlist.second,
-                          color: [Color(0xff84FAB0), Color(0xff8FD3F4)],
+
+                          color1: 0xff84FAB0,
+                          color2: 0xff8FD3F4,
                         ),
                       ),
                       //3
@@ -251,17 +244,15 @@ class _RoutesState extends State<Routes> {
                         onTap: () {
                           setState(() {
                             avater = avaterlist.third;
-
-                            avatarcolor = [
-                              Color(0xffA1C4FD),
-                              Color(0xffC2E9FB),
-                            ];
+                            grad1 = 0xffA1C4FD;
+                            grad2 = 0xffC2E9FB;
                           });
                         },
                         child: reusablecustomavatar(
                           avater: avater,
                           avaterstate: avaterlist.third,
-                          color: [Color(0xffA1C4FD), Color(0xffC2E9FB)],
+                          color1: 0xffA1C4FD,
+                          color2: 0xffC2E9FB,
                         ),
                       ),
                       //4
@@ -269,17 +260,16 @@ class _RoutesState extends State<Routes> {
                         onTap: () {
                           setState(() {
                             avater = avaterlist.fourth;
-
-                            avatarcolor = [
-                              Color(0xffF093FB),
-                              Color(0xffF5576C),
-                            ];
+                            grad1 = 0xffF093FB;
+                            grad2 = 0xffF5576C;
                           });
                         },
                         child: reusablecustomavatar(
                           avater: avater,
                           avaterstate: avaterlist.fourth,
-                          color: [Color(0xffF093FB), Color(0xffF5576C)],
+
+                          color1: 0xffF093FB,
+                          color2: 0xffF5576C,
                         ),
                       ),
                       //5
@@ -287,17 +277,15 @@ class _RoutesState extends State<Routes> {
                         onTap: () {
                           setState(() {
                             avater = avaterlist.fifth;
-
-                            avatarcolor = [
-                              Color(0xffFA709A),
-                              Color(0xffFEE140),
-                            ];
+                            grad1 = 0xffFA709A;
+                            grad2 = 0xffFEE140;
                           });
                         },
                         child: reusablecustomavatar(
                           avater: avater,
                           avaterstate: avaterlist.fifth,
-                          color: [Color(0xffFA709A), Color(0xffFEE140)],
+                          color1: 0xffFA709A,
+                          color2: 0xffFEE140,
                         ),
                       ),
                       //6
@@ -305,17 +293,15 @@ class _RoutesState extends State<Routes> {
                         onTap: () {
                           setState(() {
                             avater = avaterlist.sixth;
-
-                            avatarcolor = [
-                              Color(0xff4FACFE),
-                              Color(0xff00F2FE),
-                            ];
+                            grad1 = 0xff4FACFE;
+                            grad2 = 0xff00F2FE;
                           });
                         },
                         child: reusablecustomavatar(
                           avater: avater,
                           avaterstate: avaterlist.sixth,
-                          color: [Color(0xff4FACFE), Color(0xff00F2FE)],
+                          color1: 0xff4FACFE,
+                          color2: 0xff00F2FE,
                         ),
                       ),
                     ],
