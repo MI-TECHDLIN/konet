@@ -21,6 +21,14 @@ class _RoutesState extends State<Routes> {
   final _storeibject = FirebaseFirestore.instance;
 
   final TextEditingController _usernamecontroller = TextEditingController();
+  avaterlist avater = avaterlist.first;
+  List<Color> avatarcolor = [
+    Color(0xffFF6A88),
+
+    Color(0xffFF99AC),
+    Color(0xffFF6A88),
+  ];
+
   void updatedisplayname(String displayname) {
     //TODO: tried implementing a displayname function noticed that firebase does not await updatedisplayname func
     // void profilenaming(String name) async {
@@ -28,8 +36,6 @@ class _RoutesState extends State<Routes> {
 
     user!.updateDisplayName(displayname);
   }
-
-  agor_userid() {}
 
   List _random_generic_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
   List random_generic_let = [
@@ -63,12 +69,12 @@ class _RoutesState extends State<Routes> {
   ];
 
   Future<void> _store_user() async {
-    var username = _usernamecontroller.text.substring(0, 3);
+    var username = _usernamecontroller.text.substring(1, 3);
 
     _random_generic_num.shuffle();
     random_generic_let.shuffle();
 
-    var combo =
+    String combo =
         random_generic_let[0] +
         _random_generic_num[0] +
         _random_generic_num[1] +
@@ -79,11 +85,11 @@ class _RoutesState extends State<Routes> {
     try {
       await _storeibject
           .collection('users')
-          .doc(username)
+          .doc(combo)
           .collection('details')
           .add({
             'email': _auth.currentUser?.email,
-            'username': _auth.currentUser?.displayName,
+            'username': _usernamecontroller.text,
           });
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger(child: SnackBar(content: Text(e.message.toString())));
@@ -118,14 +124,6 @@ class _RoutesState extends State<Routes> {
       ),
     );
   }
-
-  avaterlist avater = avaterlist.first;
-  List<Color> avatarcolor = [
-    Color(0xffFF6A88),
-
-    Color(0xffFF99AC),
-    Color(0xffFF6A88),
-  ];
 
   @override
   void initState() {
