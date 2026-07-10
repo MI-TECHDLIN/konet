@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class inbox_card extends StatelessWidget {
   inbox_card({
+    super.key,
     required this.grad1,
     required this.grad2,
     required this.label,

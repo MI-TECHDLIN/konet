@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class pinned_widget extends StatelessWidget {
-  pinned_widget({required this.text, required this.grad1, required this.grad2});
+  pinned_widget({
+    super.key,
+    required this.text,
+    required this.grad1,
+    required this.grad2,
+  });
 
   String text;
   int grad1;
