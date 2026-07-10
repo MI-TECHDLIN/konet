@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/screens/messaging/widget/inbox_card.dart';
+import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
 
 class InboxScreen extends StatefulWidget {
@@ -112,9 +114,123 @@ class _InboxScreenState extends State<InboxScreen> {
             ),
 
             thread_selector(),
-            Column(children: [
 
-              ],
+            //pinned widget
+            Container(
+              margin: EdgeInsets.fromLTRB(40, 14, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'PINNED',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff9CA3AF),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: Row(
+                      children: [
+                        pinned_widget(
+                          text: 'sarah',
+                          grad1: 0xffFF6A88,
+                          grad2: 0xffFF9A8B,
+                        ),
+
+                        pinned_widget(
+                          text: 'marcus',
+                          grad1: 0xff84FAB0,
+                          grad2: 0xff8FD3F4,
+                        ),
+
+                        pinned_widget(
+                          text: 'elena',
+                          grad1: 0xffA1C4FD,
+                          grad2: 0xffC2E9FB,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            //chat_home;
+            Container(
+              margin: EdgeInsets.only(top: 30),
+              height: 500,
+
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(32),
+                color: Color(0xffFFFFFF),
+              ),
+              width: 376,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    inbox_card(
+                      grad1: 0xffF093FB,
+                      grad2: 0xffF5576C,
+                      label: 'JD',
+                      displayname: 'James',
+                      newthread: 'Check out the new designs!',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xffFA709A,
+                      grad2: 0xffFEE140,
+                      label: 'AK',
+                      displayname: 'Aisha',
+                      newthread: 'Sounds good, see you then!',
+                    ),
+                    inbox_card(
+                      grad1: 0xff4FACFE,
+                      grad2: 0xff00F2FE,
+
+                      label: 'RB',
+                      displayname: 'Riley',
+                      newthread: 'Sounds good, see you then!',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
+                    ),
+
+                    inbox_card(
+                      grad1: 0xff667EEA,
+
+                      grad2: 0xff764BA2,
+                      label: 'TP',
+                      displayname: 'Team',
+                      newthread: 'Meeting scheduled for 3 PM.',
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
