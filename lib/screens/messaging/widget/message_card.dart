@@ -4,6 +4,7 @@ class MessageCard extends StatelessWidget {
   MessageCard(
     this.Rradius,
     this.Lradius, {
+    super.key,
 
     required this.messagestring,
     required this.position,
@@ -30,15 +31,15 @@ based on the length of the message.
 
 there is a default values to increment
 ''';
-    int len_height;
-    double calc_height;
+    int lenHeight;
+    double calcHeight;
     if (calcheight.length <= 35) {
-      calc_height = 48;
+      calcHeight = 48;
     } else {
-      len_height = calcheight.length;
-      calc_height = (len_height * defaultheight) / line;
+      lenHeight = calcheight.length;
+      calcHeight = (lenHeight * defaultheight) / line;
     }
-    return calc_height;
+    return calcHeight;
   }
 
   @override

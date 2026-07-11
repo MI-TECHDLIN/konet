@@ -132,159 +132,156 @@ to get snapshots from firestore for updates and to get documents stored
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xffF6F5F1),
+    return Scaffold(
+      backgroundColor: Color(0xffF6F5F1),
 
-        appBar: AppBar(
-          elevation: 5,
-          surfaceTintColor: Color.fromARGB(255, 219, 218, 214),
-          backgroundColor: Color(0xffF6F5F1),
+      appBar: AppBar(
+        elevation: 5,
+        surfaceTintColor: Color.fromARGB(255, 219, 218, 214),
+        backgroundColor: Color(0xffF6F5F1), // shadowColor: Color(0xffF6F5F1),
 
-          // shadowColor: Color(0xffF6F5F1),
-          toolbarHeight: 70,
-          leading: Container(
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.only(left: 20),
-            child: IconButton(
-              //TODO: make this button active ones i build the home screen
-              onPressed: null,
-              icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 21),
-            ),
-          ),
-
-          title: Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 6),
-                padding: EdgeInsets.all(8.0),
-
-                alignment: Alignment.center,
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9999),
-                  gradient: LinearGradient(
-                    colors: [Color(0xff84FAB0), Color(0xff8FD3F4)],
-                  ),
-                ),
-                child: Image.asset('assets/image/profile.png', scale: 2.0),
-              ),
-              SizedBox(width: 13),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StreamBuilder(
-                    stream: _getDisplayNameStream(),
-                    builder: (context, asyncSnapshot) {
-                      if (_authinbox.currentUser!.displayName != null) {
-                        return Text(
-                          _displayname!,
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        );
-                      } else {
-                        return Text(
-                          _displayname!,
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        );
-                      }
-                    },
-                  ),
-                  Text(
-                    'online',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15,
-                      color: Color(0xff9CA3AF),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        toolbarHeight: 70,
+        leading: Container(
+          padding: EdgeInsets.all(8.0),
+          margin: EdgeInsets.only(left: 20),
+          child: IconButton(
+            //TODO: make this button active ones i build the home screen
+            onPressed: null,
+            icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 21),
           ),
         ),
 
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                StreamBuilder<QuerySnapshot?>(
-                  stream: _cloudmessage.collection('messages').snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: SizedBox(
-                          height: 708,
+        title: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 6),
+              padding: EdgeInsets.all(8.0),
 
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: const CircularProgressIndicator(),
-                          ),
-                        ),
+              alignment: Alignment.center,
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(9999),
+                gradient: LinearGradient(
+                  colors: [Color(0xff84FAB0), Color(0xff8FD3F4)],
+                ),
+              ),
+              child: Image.asset('assets/image/profile.png', scale: 2.0),
+            ),
+            SizedBox(width: 13),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StreamBuilder(
+                  stream: _getDisplayNameStream(),
+                  builder: (context, asyncSnapshot) {
+                    if (_authinbox.currentUser!.displayName != null) {
+                      return Text(
+                        _displayname!,
+                        style: TextStyle(fontWeight: FontWeight.w700),
                       );
-                    } else if (snapshot.data!.docs.isNotEmpty) {
-                      return SizedBox(
-                        height: 708,
-                        child: ListView.builder(
-                          itemBuilder: (ctx, ind) {
-                            return
-                            //message sorting by email
-                            _messagestate(ind);
-                          },
-                          itemCount: _responseint,
-                        ),
-                      );
-                    } else if (snapshot.data!.docs.isEmpty) {
-                      return _emptystate;
                     } else {
-                      return Text('no data here');
+                      return Text(
+                        _displayname!,
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      );
                     }
                   },
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  width: 343,
-                  height: 80,
-                  child: TextField(
-                    controller: _textcontorlller,
-                    onSubmitted: (text) {
-                      sendMEssage(_textcontorlller.text);
-                      _textcontorlller.clear();
-                    },
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      hint: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            child: const Text(
-                              'message',
-                              style: TextStyle(
-                                color: Color(0xFF9CA3AF),
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: const Icon(
-                              Icons.emoji_emotions_outlined,
-                              color: Color(0xff9CA3AF),
-                            ),
-                          ),
-                        ],
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(9999),
-                      ),
-                    ),
+                Text(
+                  'online',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15,
+                    color: Color(0xff9CA3AF),
                   ),
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              StreamBuilder<QuerySnapshot?>(
+                stream: _cloudmessage.collection('messages').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: SizedBox(
+                        height: 708,
+
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.data!.docs.isNotEmpty) {
+                    return SizedBox(
+                      height: 708,
+                      child: ListView.builder(
+                        itemBuilder: (ctx, ind) {
+                          return
+                          //message sorting by email
+                          _messagestate(ind);
+                        },
+                        itemCount: _responseint,
+                      ),
+                    );
+                  } else if (snapshot.data!.docs.isEmpty) {
+                    return _emptystate;
+                  } else {
+                    return Text('no data here');
+                  }
+                },
+              ),
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                width: 343,
+                height: 80,
+                child: TextField(
+                  controller: _textcontorlller,
+                  onSubmitted: (text) {
+                    sendMEssage(_textcontorlller.text);
+                    _textcontorlller.clear();
+                  },
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    hint: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: const Text(
+                            'message',
+                            style: TextStyle(
+                              color: Color(0xFF9CA3AF),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: const Icon(
+                            Icons.emoji_emotions_outlined,
+                            color: Color(0xff9CA3AF),
+                          ),
+                        ),
+                      ],
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(9999),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/constant/constant.dart';
@@ -20,6 +21,12 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void createUSer(String sEmail, String sPassword) async {
+    '''
+this functions is
+been  triggered and generates users
+for auth
+
+''';
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
         email: sEmail,
@@ -39,12 +46,6 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   }) {
     List<Widget> screens = [firststate, secondstate];
     return screens[_screen_index];
-  }
-
-  @override
-  void dispose() {
-    // Twr.dispose();
-    // profilenaming(_usernamecontroller.text);
   }
 
   @override
@@ -225,7 +226,6 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         ),
       ],
     );
-    //profile widget
 
     return Scaffold(
       backgroundColor: Color(0xffF6F5F1),
