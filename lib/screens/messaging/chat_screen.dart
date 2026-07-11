@@ -11,16 +11,18 @@ class InboxScreen extends StatefulWidget {
 }
 
 class _InboxScreenState extends State<InboxScreen> {
+  //variables
   final _textcontorlller = TextEditingController();
   final _authinbox = FirebaseAuth.instance;
   final _cloudmessage = FirebaseFirestore.instance;
-
   String? get _currentemail => _authinbox.currentUser?.email;
   String? _displayname = 'User 01';
-
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
   int? _responseint;
   List<Map<String, dynamic>> data = [];
+  int? color1 = 0xffF093FB;
+  int? color2 = 0xffF5576C;
+
   //functions
   Stream<String?> _getDisplayNameStream() {
     return _authinbox.userChanges().map((User? user) {
@@ -91,6 +93,28 @@ class _InboxScreenState extends State<InboxScreen> {
     });
   }
 
+  Future<void> _profileresponse() async {
+    var _resonse = await _cloudmessage
+        .collection('users')
+        .doc()
+        .collection('details')
+        .snapshots()
+        .map((snap) => snap.docs);
+
+    await for (List<QueryDocumentSnapshot>? docs in _resonse) {
+      print('new update');
+
+      for (final doc in docs!) {
+        final datum = doc.data() as Map<String, dynamic>;
+        ;
+
+        var color = datum['profile-color'];
+        color1 = color['color1'];
+        color2 = color['color2'];
+      }
+    }
+  }
+
   // TODO: modify functions in a way it getts message based on user id not a globsl fetching
   Future<void> _messageResponse() async {
     _response = _cloudmessage
@@ -112,7 +136,7 @@ to get snapshots from firestore for updates and to get documents stored
 
       data.clear();
 
-      // This loops through each individual document in the current list
+      // This loops through each individual document in the current list]
       for (final doc in docs) {
         final datum = doc.data() as Map<String, dynamic>;
         print('Message ID: ${doc.id}, Content: ${datum['text']}');

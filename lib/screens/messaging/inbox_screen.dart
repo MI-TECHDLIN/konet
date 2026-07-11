@@ -12,39 +12,61 @@ class InboxScreen extends StatefulWidget {
 }
 
 class _InboxScreenState extends State<InboxScreen> {
+  //variables
   List data = [];
+  int color1 = 0xffF093FB;
+  int color2 = 0xffF5576C;
   // SearchFieldListItem<SearchModel>? _selectedvalue;
   // SearchModel _searchModel =SearchModel;
 
   final _accountinstance = FirebaseFirestore.instance;
-
-  Future<void> get_allusers() async {
-    final users = _accountinstance
-        .collection('messages')
+  Future<void> _profileresponse() async {
+    var _resonse = _accountinstance
+        .collection('users')
+        .doc('t816y')
+        .collection('details')
         .snapshots()
         .map((snap) => snap.docs);
 
-    await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user
-        in users) {
-      print('new-update');
+    await for (List<QueryDocumentSnapshot>? docs in _resonse) {
+      print('new update');
 
-      for (var doc in user) {
-        final datum = doc.data();
-        print('Message ID: ${doc.id}, Content: ${datum['text']}');
-        data.add(datum['sender']);
+      for (final doc in docs!) {
+        final datum = doc.data() as Map<String, dynamic>;
+        ;
+
+        var color = datum['profile-color'];
+        color1 = color['color1'];
+        color2 = color['color2'];
       }
     }
   }
+
+  int? grad1;
+
+  // Future<void> get_allusers() async {
+  //   final users = _accountinstance
+  //       .collection('messages')
+  //       .snapshots()
+  //       .map((snap) => snap.docs);
+
+  //   await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user
+  //       in users) {
+  //     print('new-update');
+
+  //     for (var doc in user) {
+  //       final datum = doc.data();
+  //       print('Message ID: ${doc.id}, Content: ${datum['text']}');
+  //       data.add(datum['sender']);
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // s_emails.map((user) {
-    //   return SearchFieldListItem<SearchModel>(
-    //     key: user.
-    //   );
-    // }).toList();
+    _profileresponse();
   }
 
   @override
@@ -77,7 +99,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(9999),
                   gradient: LinearGradient(
-                    colors: [Color(0xff84FAB0), Color(0xff8FD3F4)],
+                    colors: [Color(color1), Color(color2)],
                   ),
                 ),
                 child: Image.asset('assets/image/profile.png', scale: 2.0),
