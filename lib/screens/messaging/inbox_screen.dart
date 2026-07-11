@@ -15,15 +15,42 @@ class _InboxScreenState extends State<InboxScreen> {
   //variables
   List data = [];
   int color1 = 0xffF093FB;
-  int color2 = 0xffF5576C;
-  // SearchFieldListItem<SearchModel>? _selectedvalue;
-  // SearchModel _searchModel =SearchModel;
+  int color2 = 0xFF57F5A9;
+
+  String intColorConverter(int decimalValue) {
+    '''
+a function that recives decmial values and converts to hexcodes 
+''';
+    if (decimalValue == 0) return '0';
+
+    String hexResult = '';
+
+    while (decimalValue > 0) {
+      int remainder = decimalValue % 16;
+
+      String hexDigit = switch (remainder) {
+        10 => 'A',
+        11 => 'B',
+        12 => 'C',
+        13 => 'D',
+        14 => 'E',
+        15 => 'F',
+        _ => remainder.toString(), // For 0-9, just keep the number as a string
+      };
+
+      hexResult = hexDigit + hexResult;
+
+      decimalValue = decimalValue ~/ 16;
+    }
+
+    return hexResult;
+  }
 
   final _accountinstance = FirebaseFirestore.instance;
   Future<void> _profileresponse() async {
     var _resonse = _accountinstance
         .collection('users')
-        .doc('t816y')
+        .doc('0963u')
         .collection('details')
         .snapshots()
         .map((snap) => snap.docs);
@@ -36,13 +63,15 @@ class _InboxScreenState extends State<InboxScreen> {
         ;
 
         var color = datum['profile-color'];
-        color1 = color['color1'];
-        color2 = color['color2'];
+        setState(() {
+          color1 = color[0];
+          color2 = color[1];
+        });
+
+        print('omo see oo  ${int.parse(intColorConverter(color1), radix: 16)}');
       }
     }
   }
-
-  int? grad1;
 
   // Future<void> get_allusers() async {
   //   final users = _accountinstance
@@ -99,7 +128,14 @@ class _InboxScreenState extends State<InboxScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(9999),
                   gradient: LinearGradient(
-                    colors: [Color(color1), Color(color2)],
+                    colors: [
+                      Color(
+                        0xff + int.parse(intColorConverter(color1), radix: 16),
+                      ),
+                      Color(
+                        0xff + int.parse(intColorConverter(color2), radix: 16),
+                      ),
+                    ],
                   ),
                 ),
                 child: Image.asset('assets/image/profile.png', scale: 2.0),
