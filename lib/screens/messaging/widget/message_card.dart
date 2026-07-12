@@ -4,7 +4,7 @@ class MessageCard extends StatelessWidget {
   MessageCard(
     this.Rradius,
     this.Lradius, {
-    super.key,
+    required this.id,
 
     required this.messagestring,
     required this.position,
@@ -15,7 +15,7 @@ class MessageCard extends StatelessWidget {
   EdgeInsets position;
 
   String messagestring;
-
+  String id;
   Color textcolor;
 
   String calcheight;
@@ -45,6 +45,7 @@ there is a default values to increment
   @override
   Widget build(BuildContext context) {
     return Container(
+      key: ValueKey(this.id),
       padding: EdgeInsets.all(16),
       margin: position,
       height: calc_height(),
