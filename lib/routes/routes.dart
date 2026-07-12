@@ -22,7 +22,7 @@ class _RoutesState extends State<Routes> {
   //variables
   avaterlist avater = avaterlist.first;
   var grad1 = 0xffFF6A88;
-  var grad2 = 0xffFF6A88;
+  var grad2 = 0xFFFF6AC8;
   final TextEditingController _usernamecontroller = TextEditingController();
   List _random_generic_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
   List random_generic_let = [
@@ -54,7 +54,7 @@ class _RoutesState extends State<Routes> {
     'z',
     '0',
   ];
-
+  String? dataid;
   // functions
   void updatedisplayname(String displayname) {
     final user = _auth.currentUser;
@@ -69,19 +69,19 @@ class _RoutesState extends State<Routes> {
 
     _random_generic_num.shuffle();
     random_generic_let.shuffle();
-    var profile_color = [grad1.toString(), grad2.toString()];
-    String combo =
+    var profile_color = [grad1, grad2];
+    dataid =
         random_generic_let[0] +
         _random_generic_num[0] +
         _random_generic_num[1] +
         _random_generic_num[3] +
         random_generic_let[4];
-    var config = username + combo;
+    var config = username + dataid!;
     print('this is userid: $config');
     try {
       await _storeibject
           .collection('users')
-          .doc(combo)
+          .doc(dataid)
           .collection('details')
           .add({
             'email': _auth.currentUser?.email,
@@ -363,7 +363,9 @@ class _RoutesState extends State<Routes> {
                         Future.delayed(const Duration(seconds: 2)).then((v) {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (c) => InboxScreen()),
+                            MaterialPageRoute(
+                              builder: (c) => InboxScreen(id: dataid!),
+                            ),
                           );
                         });
                       }),
@@ -373,7 +375,7 @@ class _RoutesState extends State<Routes> {
               ],
             );
           } else if (snapshot.hasData && snapshot.data!.displayName != null) {
-            return InboxScreen();
+            return InboxScreen(id: dataid!);
           } else {
             return RegistrationScreen();
           }

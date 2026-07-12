@@ -5,8 +5,8 @@ import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
 
 class InboxScreen extends StatefulWidget {
-  const InboxScreen({super.key});
-
+  InboxScreen({required this.id});
+  final String id;
   @override
   State<InboxScreen> createState() => _InboxScreenState();
 }
@@ -50,7 +50,7 @@ a function that recives decmial values and converts to hexcodes
   Future<void> _profileresponse() async {
     var _resonse = _accountinstance
         .collection('users')
-        .doc('0963u')
+        .doc(widget.id)
         .collection('details')
         .snapshots()
         .map((snap) => snap.docs);
