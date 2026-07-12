@@ -17,6 +17,14 @@ class _InboxScreenState extends State<InboxScreen> {
   int color1 = 0xffF093FB;
   int color2 = 0xFF57F5A9;
 
+  //uservariables
+  String _displayname = 'user01';
+  int _color1 = 0xffF093FB;
+  int _color2 = 0xFF57F5A9;
+
+  List<Map<String, dynamic>> _users = [];
+
+  // custom Functions
   String intColorConverter(int decimalValue) {
     '''
 a function that recives decmial values and converts to hexcodes 
@@ -48,6 +56,9 @@ a function that recives decmial values and converts to hexcodes
 
   final _accountinstance = FirebaseFirestore.instance.collection('users');
   Future<void> _profileresponse() async {
+    '''
+this function in to get personal inform about your profile
+''';
     var _resonse = _accountinstance
         .doc(widget.id)
         .collection('details')
@@ -72,10 +83,14 @@ a function that recives decmial values and converts to hexcodes
     }
   }
 
-  Future<void> get_allusers() async {
+  Future<void> get_users() async {
+    '''
+get concurrent users that is signedup
+''';
+
     final users = _accountinstance
-        .doc(widget.id)
-        .collection('messages')
+        .doc('k753z')
+        .collection('details')
         .snapshots()
         .map((snap) => snap.docs);
 
@@ -84,9 +99,9 @@ a function that recives decmial values and converts to hexcodes
       print('new-update');
 
       for (var doc in user) {
-        final datum = doc.data();
-        print('Message ID: ${doc.id}, Content: ${datum['text']}');
-        data.add(datum['sender']);
+        final String id = doc.id;
+        final Map<String, dynamic> datum = {'id': id, 'data': doc.data()};
+        _users.add(datum);
       }
     }
   }
@@ -225,68 +240,22 @@ a function that recives decmial values and converts to hexcodes
               ),
               width: 376,
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    inbox_card(
-                      grad1: 0xffF093FB,
-                      grad2: 0xffF5576C,
-                      label: 'JD',
-                      displayname: 'James',
-                      newthread: 'Check out the new designs!',
-                    ),
+                child: ListView.builder(
+                  itemCount: _users.length,
+                  itemBuilder: (ctx, index) {
+                    Map _eprofile = _users[index];
+                    String _edisplayname = _eprofile['data'];
 
-                    inbox_card(
-                      grad1: 0xffFA709A,
-                      grad2: 0xffFEE140,
-                      label: 'AK',
-                      displayname: 'Aisha',
-                      newthread: 'Sounds good, see you then!',
-                    ),
-                    inbox_card(
-                      grad1: 0xff4FACFE,
-                      grad2: 0xff00F2FE,
-
-                      label: 'RB',
-                      displayname: 'Riley',
-                      newthread: 'Sounds good, see you then!',
-                    ),
-
-                    inbox_card(
-                      grad1: 0xff667EEA,
-
-                      grad2: 0xff764BA2,
-                      label: 'TP',
-                      displayname: 'Team',
-                      newthread: 'Meeting scheduled for 3 PM.',
-                    ),
-
-                    inbox_card(
-                      grad1: 0xff667EEA,
-
-                      grad2: 0xff764BA2,
-                      label: 'TP',
-                      displayname: 'Team',
-                      newthread: 'Meeting scheduled for 3 PM.',
-                    ),
-
-                    inbox_card(
-                      grad1: 0xff667EEA,
-
-                      grad2: 0xff764BA2,
-                      label: 'TP',
-                      displayname: 'Team',
-                      newthread: 'Meeting scheduled for 3 PM.',
-                    ),
-
-                    inbox_card(
-                      grad1: 0xff667EEA,
-
-                      grad2: 0xff764BA2,
-                      label: 'TP',
-                      displayname: 'Team',
-                      newthread: 'Meeting scheduled for 3 PM.',
-                    ),
-                  ],
+                    print('this is ${_edisplayname}');
+                    return inbox_card(
+                      userid: 'hhwh',
+                      grad1: _color1,
+                      grad2: _color2,
+                      label: 'j',
+                      displayname: 'lmao',
+                      newthread: 'ballo',
+                    );
+                  },
                 ),
               ),
             ),

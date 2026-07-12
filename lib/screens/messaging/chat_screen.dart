@@ -66,7 +66,7 @@ class _InboxScreenState extends State<InboxScreen> {
       ? MessageCard(
           0,
           24,
-
+          id: 'lol',
           messagestring: data[index]['text'],
           calcheight: data[index]['text'],
           position: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
@@ -77,7 +77,7 @@ class _InboxScreenState extends State<InboxScreen> {
       : MessageCard(
           24,
           0,
-
+          id: 'lol',
           messagestring: data[index]['text'],
           calcheight: data[index]['text'],
           position: EdgeInsets.fromLTRB(16, 0, 130.61, 10),
