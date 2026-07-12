@@ -4,8 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:konet/screens/messaging/widget/message_card.dart';
 
 class InboxScreen extends StatefulWidget {
-  const InboxScreen({super.key});
+  InboxScreen({required this.id});
 
+  final String id;
   @override
   State<InboxScreen> createState() => _InboxScreenState();
 }
@@ -14,14 +15,12 @@ class _InboxScreenState extends State<InboxScreen> {
   //variables
   final _textcontorlller = TextEditingController();
   final _authinbox = FirebaseAuth.instance;
-  final _cloudmessage = FirebaseFirestore.instance;
+  final _cloudmessage = FirebaseFirestore.instance.collection('users');
   String? get _currentemail => _authinbox.currentUser?.email;
   String? _displayname = 'User 01';
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
   int? _responseint;
   List<Map<String, dynamic>> data = [];
-  int? color1 = 0xffF093FB;
-  int? color2 = 0xffF5576C;
 
   //functions
   Stream<String?> _getDisplayNameStream() {
@@ -87,37 +86,16 @@ class _InboxScreenState extends State<InboxScreen> {
         );
 
   Future<void> sendMEssage(String nuggets) async {
-    await _cloudmessage.collection('messages').add({
+    await _cloudmessage.doc(widget.id).collection('messages').add({
       'sender': _authinbox.currentUser!.email,
       'text': nuggets,
     });
   }
 
-  Future<void> _profileresponse() async {
-    var _resonse = await _cloudmessage
-        .collection('users')
-        .doc()
-        .collection('details')
-        .snapshots()
-        .map((snap) => snap.docs);
-
-    await for (List<QueryDocumentSnapshot>? docs in _resonse) {
-      print('new update');
-
-      for (final doc in docs!) {
-        final datum = doc.data() as Map<String, dynamic>;
-        ;
-
-        var color = datum['profile-color'];
-        color1 = color['color1'];
-        color2 = color['color2'];
-      }
-    }
-  }
-
   // TODO: modify functions in a way it getts message based on user id not a globsl fetching
   Future<void> _messageResponse() async {
     _response = _cloudmessage
+        .doc(widget.id)
         .collection('messages')
         .snapshots()
         .map((snap) => snap.docs);
@@ -231,7 +209,10 @@ to get snapshots from firestore for updates and to get documents stored
           child: Column(
             children: [
               StreamBuilder<QuerySnapshot?>(
-                stream: _cloudmessage.collection('messages').snapshots(),
+                stream: _cloudmessage
+                    .doc(widget.id)
+                    .collection('messages')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(

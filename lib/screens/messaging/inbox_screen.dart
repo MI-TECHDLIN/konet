@@ -46,10 +46,9 @@ a function that recives decmial values and converts to hexcodes
     return hexResult;
   }
 
-  final _accountinstance = FirebaseFirestore.instance;
+  final _accountinstance = FirebaseFirestore.instance.collection('users');
   Future<void> _profileresponse() async {
     var _resonse = _accountinstance
-        .collection('users')
         .doc(widget.id)
         .collection('details')
         .snapshots()
@@ -73,23 +72,24 @@ a function that recives decmial values and converts to hexcodes
     }
   }
 
-  // Future<void> get_allusers() async {
-  //   final users = _accountinstance
-  //       .collection('messages')
-  //       .snapshots()
-  //       .map((snap) => snap.docs);
+  Future<void> get_allusers() async {
+    final users = _accountinstance
+        .doc(widget.id)
+        .collection('messages')
+        .snapshots()
+        .map((snap) => snap.docs);
 
-  //   await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user
-  //       in users) {
-  //     print('new-update');
+    await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user
+        in users) {
+      print('new-update');
 
-  //     for (var doc in user) {
-  //       final datum = doc.data();
-  //       print('Message ID: ${doc.id}, Content: ${datum['text']}');
-  //       data.add(datum['sender']);
-  //     }
-  //   }
-  // }
+      for (var doc in user) {
+        final datum = doc.data();
+        print('Message ID: ${doc.id}, Content: ${datum['text']}');
+        data.add(datum['sender']);
+      }
+    }
+  }
 
   @override
   void initState() {
