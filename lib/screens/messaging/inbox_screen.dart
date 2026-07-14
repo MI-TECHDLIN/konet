@@ -5,7 +5,7 @@ import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
 
 class InboxScreen extends StatefulWidget {
-  InboxScreen({required this.id});
+  const InboxScreen({super.key, required this.id});
   final String id;
   @override
   State<InboxScreen> createState() => _InboxScreenState();
@@ -18,11 +18,11 @@ class _InboxScreenState extends State<InboxScreen> {
   int color2 = 0xFF57F5A9;
 
   //uservariables
-  String _displayname = 'user01';
-  int _color1 = 0xffF093FB;
-  int _color2 = 0xFF57F5A9;
+  final String _displayname = 'user01';
+  final int _color1 = 0xffF093FB;
+  final int _color2 = 0xFF57F5A9;
 
-  List<Map<String, dynamic>> _users = [];
+  final List<Map<String, dynamic>> users = [];
 
   // custom Functions
   String intColorConverter(int decimalValue) {
@@ -59,58 +59,68 @@ a function that recives decmial values and converts to hexcodes
     '''
 this function in to get personal inform about your profile
 ''';
-    var _resonse = _accountinstance
-        .doc(widget.id)
-        .collection('details')
-        .snapshots()
-        .map((snap) => snap.docs);
 
-    await for (List<QueryDocumentSnapshot>? docs in _resonse) {
-      print('new update');
+    try {
+      var resonse = _accountinstance
+          .doc(widget.id)
+          .collection('details')
+          .snapshots()
+          .map((snap) => snap.docs);
 
-      for (final doc in docs!) {
-        final datum = doc.data() as Map<String, dynamic>;
-        ;
+      await for (List<QueryDocumentSnapshot>? docs in resonse) {
+        if (!mounted) return;
+        print('new update');
 
-        var color = datum['profile-color'];
-        setState(() {
-          color1 = color[0];
-          color2 = color[1];
-        });
+        for (final doc in docs!) {
+          final datum = doc.data() as Map<String, dynamic>;
 
-        print('omo see oo  ${int.parse(intColorConverter(color1), radix: 16)}');
+          var color = datum['profile-color'];
+          setState(() {
+            color1 = color[0];
+            color2 = color[1];
+          });
+
+          print(
+            'omo see oo  ${int.parse(intColorConverter(color1), radix: 16)}',
+          );
+        }
       }
+    } catch (e) {
+      print('error:${e.toString()}');
     }
   }
 
-  Future<void> get_users() async {
+  Future<void> _get_users() async {
     '''
-get concurrent users that is signedup
-''';
+  get concurrent users that is signedup
+  for v1 feature
+  ''';
 
-    final users = _accountinstance
-        .doc('k753z')
+    final docs = _accountinstance
+        .doc('pdnuZ975VRewSHINWh8RLsdfeEa2')
         .collection('details')
         .snapshots()
         .map((snap) => snap.docs);
 
-    await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user
-        in users) {
+    await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user in docs) {
       print('new-update');
 
       for (var doc in user) {
         final String id = doc.id;
         final Map<String, dynamic> datum = {'id': id, 'data': doc.data()};
-        _users.add(datum);
+        users.add(datum);
+
+        print(users);
       }
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO: implement iniRtState
     super.initState();
     _profileresponse();
+    _get_users();
   }
 
   @override
@@ -203,6 +213,7 @@ get concurrent users that is signedup
                     ),
                   ),
                   SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
                         pinned_widget(
@@ -230,29 +241,44 @@ get concurrent users that is signedup
             ),
 
             //chat_home;
-            Container(
-              margin: EdgeInsets.only(top: 30),
-              height: 500,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(top: 30),
 
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32),
-                color: Color(0xffFFFFFF),
-              ),
-              width: 376,
-              child: SingleChildScrollView(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(32),
+                  color: Color(0xffFFFFFF),
+                ),
+                width: 376,
                 child: ListView.builder(
-                  itemCount: _users.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: users.length,
                   itemBuilder: (ctx, index) {
-                    Map _eprofile = _users[index];
-                    String _edisplayname = _eprofile['data'];
+                    //streaming other users with stream
+                    //modal userdatas for other users
+                    Map<String, dynamic> eprofile = users[index]['data'];
+                    String _dataid = users[index]['id'];
 
-                    print('this is ${_edisplayname}');
+                    String username = eprofile['username'];
+                    String email = eprofile['email'];
+                    List colors = eprofile['profile-color'];
+                    int fColor = int.parse(
+                      intColorConverter(colors[0]),
+                      radix: 16,
+                    );
+                    int sColor = int.parse(
+                      intColorConverter(colors[1]),
+                      radix: 16,
+                    );
+
+                    print('this is the datas $data');
                     return inbox_card(
                       userid: 'hhwh',
-                      grad1: _color1,
-                      grad2: _color2,
-                      label: 'j',
-                      displayname: 'lmao',
+                      grad1: fColor,
+                      grad2: sColor,
+                      label: 'JB',
+                      displayname: username,
                       newthread: 'ballo',
                     );
                   },

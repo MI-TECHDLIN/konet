@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class inbox_card extends StatelessWidget {
   inbox_card({
+    super.key,
     required this.userid,
     required this.grad1,
     required this.grad2,
@@ -35,7 +36,7 @@ class inbox_card extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     gradient: LinearGradient(
-                      colors: [Color(grad1), Color(grad2)],
+                      colors: [Color(0xff + grad1), Color(0xff + grad2)],
                     ),
                   ),
                   child: Text(
