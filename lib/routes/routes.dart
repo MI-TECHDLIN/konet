@@ -24,64 +24,29 @@ class _RoutesState extends State<Routes> {
   var grad1 = 0xffFF6A88;
   var grad2 = 0xFFFF6AC8;
   final TextEditingController _usernamecontroller = TextEditingController();
-  List _random_generic_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-  List random_generic_let = [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'l',
-    'k',
-    'm',
-    'n',
-    'o',
-    'p',
-    'q',
-    'r',
-    's',
-    't',
-    'u',
-    'v',
-    'w',
-    'x',
-    'y',
-    'z',
-    '0',
-  ];
-  String? dataid;
+
   // functions
   void updatedisplayname(String displayname) {
     final user = _auth.currentUser;
 
     user!.updateDisplayName(displayname);
-
-    // }
   }
 
   Future<void> _store_user() async {
-    var username = _usernamecontroller.text.substring(1, 3);
+    '''
+this function basically stores users
+and gives a generic 
+''';
 
-    _random_generic_num.shuffle();
-    random_generic_let.shuffle();
     var profile_color = [grad1, grad2];
-    dataid =
-        random_generic_let[0] +
-        _random_generic_num[0] +
-        _random_generic_num[1] +
-        _random_generic_num[3] +
-        random_generic_let[4];
-    var config = username + dataid!;
+
+    var config = _auth.currentUser!.uid;
+    if (config == null) return;
     print('this is userid: $config');
     try {
       await _storeibject
           .collection('users')
-          .doc(dataid)
+          .doc(config)
           .collection('details')
           .add({
             'email': _auth.currentUser?.email,
@@ -138,247 +103,254 @@ class _RoutesState extends State<Routes> {
       body: StreamBuilder(
         stream: _auth.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.displayName == null) {
-            return Stack(
-              children: [
-                Positioned(
-                  top: 170,
-                  left: 30,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'you',
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontFamily: 'InstrumentSerif',
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      const Text(
-                        'how should people see you?',
-                        style: TextStyle(fontWeight: FontWeight.w300),
-                      ),
-                    ],
-                  ),
-                ),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+            final user = snapshot.data!;
+            final currentUserId = user.uid;
 
-                Positioned(
-                  top: 320,
-                  left: 140,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 128,
-                        width: 132,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(9999),
-                          gradient: LinearGradient(
-                            colors: [Color(grad1), Color(grad2)],
-                          ),
-                        ),
-                        child: Image(
-                          image: AssetImage('assets/image/profile.png'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 420,
-                  left: 213,
-                  child: Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(9999),
-                    ),
-                    child: Image(image: AssetImage('assets/image/cam.png')),
-                  ),
-                ),
-
-                Positioned(
-                  top: 480,
-                  left: 20,
-                  child: Row(
-                    children: [
-                      //1
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            avater = avaterlist.first;
-
-                            grad1 = 0xffFF6A88;
-                            grad2 = 0xFFF94468;
-                          });
-                        },
-                        child: reusablecustomavatar(
-                          avater: avater,
-                          avaterstate: avaterlist.first,
-
-                          color1: 0xffFF6A88,
-                          color2: 0xFFF94468,
-                        ),
-                      ),
-
-                      //2
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            avater = avaterlist.second;
-                            grad1 = 0xff84FAB0;
-                            grad2 = 0xff8FD3F4;
-                          });
-                        },
-                        child: reusablecustomavatar(
-                          avater: avater,
-                          avaterstate: avaterlist.second,
-
-                          color1: 0xff84FAB0,
-                          color2: 0xff8FD3F4,
-                        ),
-                      ),
-                      //3
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            avater = avaterlist.third;
-                            grad1 = 0xffA1C4FD;
-                            grad2 = 0xffC2E9FB;
-                          });
-                        },
-                        child: reusablecustomavatar(
-                          avater: avater,
-                          avaterstate: avaterlist.third,
-                          color1: 0xffA1C4FD,
-                          color2: 0xffC2E9FB,
-                        ),
-                      ),
-                      //4
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            avater = avaterlist.fourth;
-                            grad1 = 0xffF093FB;
-                            grad2 = 0xffF5576C;
-                          });
-                        },
-                        child: reusablecustomavatar(
-                          avater: avater,
-                          avaterstate: avaterlist.fourth,
-
-                          color1: 0xffF093FB,
-                          color2: 0xffF5576C,
-                        ),
-                      ),
-                      //5
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            avater = avaterlist.fifth;
-                            grad1 = 0xffFA709A;
-                            grad2 = 0xffFEE140;
-                          });
-                        },
-                        child: reusablecustomavatar(
-                          avater: avater,
-                          avaterstate: avaterlist.fifth,
-                          color1: 0xffFA709A,
-                          color2: 0xffFEE140,
-                        ),
-                      ),
-                      //6
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            avater = avaterlist.sixth;
-                            grad1 = 0xff4FACFE;
-                            grad2 = 0xff00F2FE;
-                          });
-                        },
-                        child: reusablecustomavatar(
-                          avater: avater,
-                          avaterstate: avaterlist.sixth,
-                          color1: 0xff4FACFE,
-                          color2: 0xff00F2FE,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Positioned(
-                  top: 568,
-                  left: 30,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: const Text(
-                          'YOUR  USERNAME',
+            if (user.displayName == null || user.displayName!.isEmpty) {
+              return Stack(
+                children: [
+                  Positioned(
+                    top: 170,
+                    left: 30,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'you',
                           style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'inter',
+                            fontSize: 50,
+                            fontFamily: 'InstrumentSerif',
                           ),
                         ),
-                      ),
-                      Container(
-                        height: 55,
-                        width: 350,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
+                        SizedBox(height: 5),
+                        const Text(
+                          'how should people see you?',
+                          style: TextStyle(fontWeight: FontWeight.w300),
                         ),
-                        child: TextField(
-                          controller: _usernamecontroller,
-                          decoration: InputDecoration(
-                            hint: Container(
-                              margin: EdgeInsets.only(left: 30),
-                              child: const Text(
-                                'Alex Rivers',
-                                style: TextStyle(
-                                  color: Color(0x826B7280),
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
+                      ],
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 320,
+                    left: 140,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 128,
+                          width: 132,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9999),
+                            gradient: LinearGradient(
+                              colors: [Color(grad1), Color(grad2)],
+                            ),
+                          ),
+                          child: Image(
+                            image: AssetImage('assets/image/profile.png'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 420,
+                    left: 213,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(9999),
+                      ),
+                      child: Image(image: AssetImage('assets/image/cam.png')),
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 480,
+                    left: 20,
+                    child: Row(
+                      children: [
+                        //1
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              avater = avaterlist.first;
+
+                              grad1 = 0xffFF6A88;
+                              grad2 = 0xFFF94468;
+                            });
+                          },
+                          child: reusablecustomavatar(
+                            avater: avater,
+                            avaterstate: avaterlist.first,
+
+                            color1: 0xffFF6A88,
+                            color2: 0xFFF94468,
+                          ),
+                        ),
+
+                        //2
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              avater = avaterlist.second;
+                              grad1 = 0xff84FAB0;
+                              grad2 = 0xff8FD3F4;
+                            });
+                          },
+                          child: reusablecustomavatar(
+                            avater: avater,
+                            avaterstate: avaterlist.second,
+
+                            color1: 0xff84FAB0,
+                            color2: 0xff8FD3F4,
+                          ),
+                        ),
+                        //3
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              avater = avaterlist.third;
+                              grad1 = 0xffA1C4FD;
+                              grad2 = 0xffC2E9FB;
+                            });
+                          },
+                          child: reusablecustomavatar(
+                            avater: avater,
+                            avaterstate: avaterlist.third,
+                            color1: 0xffA1C4FD,
+                            color2: 0xffC2E9FB,
+                          ),
+                        ),
+                        //4
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              avater = avaterlist.fourth;
+                              grad1 = 0xffF093FB;
+                              grad2 = 0xffF5576C;
+                            });
+                          },
+                          child: reusablecustomavatar(
+                            avater: avater,
+                            avaterstate: avaterlist.fourth,
+
+                            color1: 0xffF093FB,
+                            color2: 0xffF5576C,
+                          ),
+                        ),
+                        //5
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              avater = avaterlist.fifth;
+                              grad1 = 0xffFA709A;
+                              grad2 = 0xffFEE140;
+                            });
+                          },
+                          child: reusablecustomavatar(
+                            avater: avater,
+                            avaterstate: avaterlist.fifth,
+                            color1: 0xffFA709A,
+                            color2: 0xffFEE140,
+                          ),
+                        ),
+                        //6
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              avater = avaterlist.sixth;
+                              grad1 = 0xff4FACFE;
+                              grad2 = 0xff00F2FE;
+                            });
+                          },
+                          child: reusablecustomavatar(
+                            avater: avater,
+                            avaterstate: avaterlist.sixth,
+                            color1: 0xff4FACFE,
+                            color2: 0xff00F2FE,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 568,
+                    left: 30,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: const Text(
+                            'YOUR  USERNAME',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'inter',
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 55,
+                          width: 350,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: TextField(
+                            controller: _usernamecontroller,
+                            decoration: InputDecoration(
+                              hint: Container(
+                                margin: EdgeInsets.only(left: 30),
+                                child: const Text(
+                                  'Alex Rivers',
+                                  style: TextStyle(
+                                    color: Color(0x826B7280),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
+                              border: InputBorder.none,
                             ),
-                            border: InputBorder.none,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Positioned(
-                  bottom: 90,
-                  left: 45,
-                  child: Column(
-                    children: [
-                      page_btn(btn_text[1], () {
-                        updatedisplayname(_usernamecontroller.text);
-                        _store_user();
-                        Future.delayed(const Duration(seconds: 2)).then((v) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (c) => InboxScreen(id: dataid!),
-                            ),
-                          );
-                        });
-                      }),
-                    ],
+                  Positioned(
+                    bottom: 90,
+                    left: 45,
+                    child: Column(
+                      children: [
+                        page_btn(btn_text[1], () {
+                          updatedisplayname(_usernamecontroller.text);
+                          _store_user();
+                          Future.delayed(const Duration(seconds: 2)).then((v) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (c) => InboxScreen(id: currentUserId!),
+                              ),
+                            );
+                          });
+                        }),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          } else if (snapshot.hasData && snapshot.data!.displayName != null) {
-            return InboxScreen(id: dataid!);
-          } else {
-            return RegistrationScreen();
+                ],
+              );
+            } else if (snapshot.hasData && snapshot.data!.displayName != null) {
+              return InboxScreen(id: currentUserId);
+            }
           }
+          return RegistrationScreen();
         },
       ),
     );
