@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:konet/screens/messaging/chat_screen.dart';
 import 'package:konet/screens/messaging/widget/inbox_card.dart';
 import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
@@ -54,7 +55,7 @@ a function that recives decmial values and converts to hexcodes
     return hexResult;
   }
 
-  final _accountinstance = FirebaseFirestore.instance.collection('users');
+  final _accountinstance = FirebaseFirestore.instance.collection('database');
   Future<void> _profileresponse() async {
     '''
 this function in to get personal inform about your profile
@@ -62,6 +63,8 @@ this function in to get personal inform about your profile
 
     try {
       var resonse = _accountinstance
+          .doc('123')
+          .collection('users')
           .doc(widget.id)
           .collection('details')
           .snapshots()
@@ -97,10 +100,10 @@ this function in to get personal inform about your profile
   ''';
 
     final docs = _accountinstance
-        .doc('pdnuZ975VRewSHINWh8RLsdfeEa2')
-        .collection('details')
-        .snapshots()
-        .map((snap) => snap.docs);
+        .doc('123')
+        .collection('users')
+        .get()
+        .asStream();
 
     await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user in docs) {
       print('new-update');
@@ -274,7 +277,7 @@ this function in to get personal inform about your profile
 
                     print('this is the datas $data');
                     return inbox_card(
-                      userid: 'hhwh',
+                      userid: 'jj',
                       grad1: fColor,
                       grad2: sColor,
                       label: 'JB',
