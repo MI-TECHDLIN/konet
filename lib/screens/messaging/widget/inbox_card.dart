@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:konet/screens/messaging/chat_screen.dart';
 
 class inbox_card extends StatelessWidget {
   inbox_card({
@@ -20,7 +21,10 @@ class inbox_card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      key: ValueKey(userid),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (c) => ChatScreen(userid: userid)),
+      ),
       child: Container(
         alignment: Alignment.center,
         child: Column(
