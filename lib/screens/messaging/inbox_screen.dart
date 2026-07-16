@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/screens/messaging/chat_screen.dart';
 import 'package:konet/screens/messaging/widget/inbox_card.dart';
+import 'package:konet/screens/messaging/widget/modal_sheet.dart';
 import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
 
@@ -102,17 +103,19 @@ this function in to get personal inform about your profile
     final docs = _accountinstance
         .doc('123')
         .collection('users')
-        .get()
-        .asStream();
+        .doc('')
+        .collection('details')
+        .snapshots()
+        .map((snap) => snap.docs);
 
-    await for (List<QueryDocumentSnapshot<Map<String, dynamic>>> user in docs) {
-      print('new-update');
-
-      for (var doc in user) {
+    await for (var data in docs) {
+      print('newupdate');
+      for (var doc in data) {
         final String id = doc.id;
         final Map<String, dynamic> datum = {'id': id, 'data': doc.data()};
-        users.add(datum);
-
+        setState(() {
+          users.add(datum);
+        });
         print(users);
       }
     }
@@ -261,7 +264,7 @@ this function in to get personal inform about your profile
                     //streaming other users with stream
                     //modal userdatas for other users
                     Map<String, dynamic> eprofile = users[index]['data'];
-                    String _dataid = users[index]['id'];
+                    String dataid = users[index]['id'];
 
                     String username = eprofile['username'];
                     String email = eprofile['email'];
@@ -289,6 +292,23 @@ this function in to get personal inform about your profile
               ),
             ),
           ],
+        ),
+      ),
+
+      floatingActionButton: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+        child: FloatingActionButton(
+          backgroundColor: Color(0xff4F46E5),
+
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (ctx) {
+                return modalsheet(widget: widget.id);
+              },
+            );
+          },
+          child: Image.asset('assets/image/add.png'),
         ),
       ),
     );
