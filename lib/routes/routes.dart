@@ -18,18 +18,81 @@ class Routes extends StatefulWidget {
 class _RoutesState extends State<Routes> {
   //auth
   final _storeibject = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //variables
   avaterlist avater = avaterlist.first;
   var grad1 = 0xffFF6A88;
+  User? get user => _auth.currentUser;
+  var userid = '';
+
+  String get config => _auth.currentUser!.uid;
+
   var grad2 = 0xFFFF6AC8;
   final TextEditingController _usernamecontroller = TextEditingController();
 
   // functions
   void updatedisplayname(String displayname) {
-    final user = _auth.currentUser;
-
     user!.updateDisplayName(displayname);
+  }
+
+  String useridGenertaor() {
+    '''
+thought of a method that can actually generate userid based on user input
+
+how does this algorithm works
+2 detail from string and num;
+and a list of random_numbers to get your id
+''';
+    List<String> randomStr = [
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'l',
+      'M',
+      'N',
+      'O',
+      'P',
+      'Q',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+      'Z',
+    ];
+    List<String> randomoNum = [
+      '0',
+      '1',
+      '2',
+      '3',
+      ' 4',
+      ' 5',
+      '6',
+      '7',
+      '8',
+      '9',
+    ];
+    randomStr.shuffle();
+    randomoNum.shuffle();
+    var twoRandomstr = randomStr[0] + randomStr[1];
+    var twoRandomNum = randomoNum[0] + randomoNum[1];
+    setState(() {
+      userid = 'KONET-$twoRandomstr$twoRandomNum';
+    });
+    print(userid);
+    return userid;
   }
 
   Future<void> _store_user() async {
@@ -38,20 +101,21 @@ this function basically stores users
 and gives a generic 
 ''';
 
-    var profile_color = [grad1, grad2];
+    var profileColor = [grad1, grad2];
 
-    var config = _auth.currentUser!.uid;
-    if (config == null) return;
     print('this is userid: $config');
     try {
       await _storeibject
+          .collection('database')
+          .doc('123')
           .collection('users')
           .doc(config)
           .collection('details')
           .add({
             'email': _auth.currentUser?.email,
             'username': _usernamecontroller.text,
-            'profile-color': profile_color,
+            'profile-color': profileColor,
+            'userid': userid,
           });
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger(child: SnackBar(content: Text(e.message.toString())));
@@ -92,9 +156,8 @@ and gives a generic
   void initState() {
     // TODO: implement initState
     super.initState();
+    useridGenertaor();
   }
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -333,10 +396,10 @@ and gives a generic
                           updatedisplayname(_usernamecontroller.text);
                           _store_user();
                           Future.delayed(const Duration(seconds: 2)).then((v) {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (c) => InboxScreen(id: currentUserId!),
+                                builder: (c) => InboxScreen(id: currentUserId),
                               ),
                             );
                           });
@@ -347,7 +410,7 @@ and gives a generic
                 ],
               );
             } else if (snapshot.hasData && snapshot.data!.displayName != null) {
-              return InboxScreen(id: currentUserId);
+              return InboxScreen(id: config);
             }
           }
           return RegistrationScreen();
