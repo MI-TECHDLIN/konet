@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:konet/constant/constant.dart';
@@ -25,6 +26,7 @@ class _RoutesState extends State<Routes> {
   var grad1 = 0xffFF6A88;
   User? get user => _auth.currentUser;
   var userid = '';
+  var linkid = '';
 
   String get config => _auth.currentUser!.uid;
 
@@ -32,11 +34,24 @@ class _RoutesState extends State<Routes> {
   final TextEditingController _usernamecontroller = TextEditingController();
 
   // functions
-  void updatedisplayname(String displayname) {
-    user!.updateDisplayName(displayname);
+
+  Future<void> localStore(String id) async {
+    final SharedPreferences preference = await SharedPreferences.getInstance();
+
+    await preference.setString('id', id);
   }
 
-  String useridGenertaor() {
+  Future<String?> getId() async {
+    final SharedPreferences preference = await SharedPreferences.getInstance();
+
+    setState(() {
+      linkid = preference.getString('id')!;
+    });
+
+    return linkid;
+  }
+
+  void useridGenertaor() {
     '''
 thought of a method that can actually generate userid based on user input
 
@@ -91,8 +106,14 @@ and a list of random_numbers to get your id
     setState(() {
       userid = 'KONET-$twoRandomstr$twoRandomNum';
     });
+
+    localStore(userid);
     print(userid);
-    return userid;
+  }
+
+  void updatedisplayname(String displayname) {
+    user!.updateDisplayName(displayname);
+    useridGenertaor();
   }
 
   Future<void> _store_user() async {
@@ -109,7 +130,7 @@ and gives a generic
           .collection('database')
           .doc('123')
           .collection('users')
-          .doc(config)
+          .doc(userid)
           .collection('details')
           .add({
             'email': _auth.currentUser?.email,
@@ -156,10 +177,9 @@ and gives a generic
   void initState() {
     // TODO: implement initState
     super.initState();
-    useridGenertaor();
+    getId();
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffF6F5F1),
@@ -395,6 +415,8 @@ and gives a generic
                         page_btn(btn_text[1], () {
                           updatedisplayname(_usernamecontroller.text);
                           _store_user();
+                          print('dude see your id $linkid');
+
                           Future.delayed(const Duration(seconds: 2)).then((v) {
                             Navigator.pushReplacement(
                               context,
@@ -410,7 +432,7 @@ and gives a generic
                 ],
               );
             } else if (snapshot.hasData && snapshot.data!.displayName != null) {
-              return InboxScreen(id: config);
+              return InboxScreen(id: linkid);
             }
           }
           return RegistrationScreen();
