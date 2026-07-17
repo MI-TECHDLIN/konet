@@ -7,9 +7,11 @@ class modalsheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    //modal  bottom sheet implemeneted for add users in custom collection
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SizedBox(
-        height: 900,
+        height: 460,
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(30.0),
@@ -57,7 +59,7 @@ class modalsheet extends StatelessWidget {
               ),
 
               Container(
-                margin: EdgeInsets.all(15),
+                margin: EdgeInsets.all(16),
                 // alignment: Alignment.center,
                 height: 52,
                 width: 327,
@@ -68,8 +70,9 @@ class modalsheet extends StatelessWidget {
                   onPressed: null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Image.asset('assets/image/share.png'),
+                      SizedBox(width: 5),
                       Text(
                         'Share my code',
                         style: TextStyle(
@@ -81,6 +84,7 @@ class modalsheet extends StatelessWidget {
                   ),
                 ),
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -102,9 +106,12 @@ class modalsheet extends StatelessWidget {
 
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 20),
+                  //textfield   for sorting friends userid
+                  margin: EdgeInsets.only(top: 25),
+
+                  //
                   alignment: Alignment.center,
-                  height: 52,
+                  height: 65,
                   width: 327,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.blue),
@@ -114,7 +121,13 @@ class modalsheet extends StatelessWidget {
                     decoration: InputDecoration(
                       hint: Container(
                         margin: EdgeInsets.only(left: 5),
-                        child: Text('Enter friend\'s code'),
+                        child: Text(
+                          'Enter friend\'s code',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xff6B7280),
+                          ),
+                        ),
                       ),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
