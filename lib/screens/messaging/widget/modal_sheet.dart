@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
 class modalsheet extends StatelessWidget {
   const modalsheet({super.key, required this.widget});
 
   final String widget;
   void copybiloard(BuildContext ctx) {
+    '''
+this function is callled to fetch usercode 
+''';
     Clipboard.setData(
       ClipboardData(text: widget),
     ).then((_) => print('$widget'));
+  }
+
+  void shareoption() {
+    '''
+share option to different socials
+''';
+    Share.share(widget, subject: 'share unique code to add friend $widget ');
   }
 
   @override
@@ -76,7 +87,7 @@ class modalsheet extends StatelessWidget {
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Color(0xff4F46E5)),
                   ),
-                  onPressed: null,
+                  onPressed: () => shareoption(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
