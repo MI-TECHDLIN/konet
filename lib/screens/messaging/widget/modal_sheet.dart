@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class modalsheet extends StatelessWidget {
   const modalsheet({super.key, required this.widget});
 
   final String widget;
+  void copybiloard(BuildContext ctx) {
+    Clipboard.setData(
+      ClipboardData(text: widget),
+    ).then((_) => print('$widget'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +34,27 @@ class modalsheet extends StatelessWidget {
                 style: TextStyle(color: Color(0xff6B7280)),
               ),
 
-              Container(
-                alignment: Alignment.center,
-                margin: EdgeInsets.all(20),
-                height: 76,
-                width: 327,
+              GestureDetector(
+                onTap: () => copybiloard(context),
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.all(20),
+                  height: 76,
+                  width: 327,
 
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  color: Color(0xFFC8D3F7),
-                ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    color: Color(0xFFC8D3F7),
+                  ),
 
-                child: Text(
-                  widget,
-                  style: TextStyle(
-                    fontSize: 26,
+                  child: Text(
+                    widget,
+                    style: TextStyle(
+                      fontSize: 26,
 
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff4F46E5),
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff4F46E5),
+                    ),
                   ),
                 ),
               ),

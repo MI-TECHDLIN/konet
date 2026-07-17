@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:konet/screens/messaging/chat_screen.dart';
 import 'package:konet/screens/messaging/widget/inbox_card.dart';
 import 'package:konet/screens/messaging/widget/modal_sheet.dart';
 import 'package:konet/screens/messaging/widget/pineed_widget.dart';
@@ -302,6 +301,7 @@ this function in to get personal inform about your profile
 
           onPressed: () {
             showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               builder: (ctx) {
                 return modalsheet(widget: widget.id);
