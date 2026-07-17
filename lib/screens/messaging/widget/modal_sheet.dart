@@ -1,25 +1,94 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
-class modalsheet extends StatelessWidget {
-  const modalsheet({super.key, required this.widget});
+class modalsheet extends StatefulWidget {
+  modalsheet({super.key, required this.userid, required this.store});
+  final String userid;
+  final List<Map<String, dynamic>> store;
 
-  final String widget;
+  @override
+  State<modalsheet> createState() => _modalsheetState();
+}
+
+class _modalsheetState extends State<modalsheet> {
+  bool saved = false;
+
+  final _data = FirebaseFirestore.instance.collection('database');
+  final TextEditingController useridstr = TextEditingController();
+  //functions
   void copybiloard(BuildContext ctx) {
     '''
 this function is callled to fetch usercode 
 ''';
     Clipboard.setData(
-      ClipboardData(text: widget),
-    ).then((_) => print('$widget'));
+      ClipboardData(text: widget.userid),
+    ).then((_) => print(widget.userid));
   }
 
   void shareoption() {
     '''
 share option to different socials
 ''';
-    Share.share(widget, subject: 'share unique code to add friend $widget ');
+    Share.share(
+      widget.userid,
+      subject: 'share unique code to add friend ${widget.userid} ',
+    );
+  }
+
+  Future<void> adduser(String userid) async {
+    '''
+  this basically add users to collection
+
+  ''';
+    try {
+      final datavar = _data
+          .doc('123')
+          .collection('users')
+          .doc(userid)
+          .collection('details')
+          .snapshots()
+          .map((doc) => doc.docs);
+
+      await for (var data in datavar) {
+        //fetches modified data from dbs
+        if (!mounted) return;
+
+        print('newuuupdate');
+
+        for (final singlet in data) {
+          final datum = singlet.data();
+          final docid = singlet.id;
+          final Map<String, dynamic> user = {'docid': docid, 'data': datum};
+
+          setState(() {
+            widget.store.add(user);
+            widget.store.isNotEmpty ? saved = true : saved = false;
+            saved == true ? Navigator.pop(context) : print('awaiting');
+          });
+          for (int i = 0; i < widget.store.length; i++) {
+            if (widget.store[i]['docid'] == docid) {
+              print('this user exist ${widget.store}');
+            } else {
+              setState(() {
+                widget.store.add(user);
+                print(' new user added ${widget.store}');
+              });
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print('erro:${e.toString()}');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // _get_users();
   }
 
   @override
@@ -59,7 +128,7 @@ share option to different socials
                   ),
 
                   child: Text(
-                    widget,
+                    widget.userid,
                     style: TextStyle(
                       fontSize: 26,
 
@@ -128,32 +197,71 @@ share option to different socials
                 child: Container(
                   //textfield   for sorting friends userid
                   margin: EdgeInsets.only(top: 25),
-
                   //
                   alignment: Alignment.center,
                   height: 65,
-                  width: 327,
+                  width: 320,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.blue),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hint: Container(
-                        margin: EdgeInsets.only(left: 5),
-                        child: Text(
-                          'Enter friend\'s code',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xff6B7280),
+
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(top: 10),
+                        alignment: Alignment.center,
+
+                        height: 40,
+                        width: 220,
+                        child: TextField(
+                          controller: useridstr,
+                          decoration: InputDecoration(
+                            hint: Container(
+                              height: 25,
+                              margin: EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'Enter friend\'s code',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color(0xff6B7280),
+                                ),
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                         ),
                       ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(16),
+                      Container(
+                        alignment: Alignment.center,
+                        height: 36,
+                        width: 76,
+
+                        child: ElevatedButton(
+                          onPressed: () {
+                            adduser(useridstr.text);
+                            print('omo we try ${widget.store}');
+                          },
+                          style: ButtonStyle(
+                            alignment: Alignment.center,
+                            backgroundColor: WidgetStatePropertyAll(
+                              Color(0xff4F46E5),
+                            ),
+                          ),
+
+                          child: Icon(
+                            Icons.arrow_upward,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
