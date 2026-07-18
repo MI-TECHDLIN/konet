@@ -180,6 +180,7 @@ and gives a generic
     getId();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffF6F5F1),

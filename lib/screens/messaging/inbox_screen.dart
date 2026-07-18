@@ -110,11 +110,9 @@ this function is used to stream  folks and stream and add them to a local var
       print('updated folks!');
 
       for (var data in folk) {
-        print('lol see ur friend${data.data()}');
-
         setState(() {
           users.add(data.data());
-          print('this is ur friends');
+          print('new users added ${users}');
         });
       }
     }

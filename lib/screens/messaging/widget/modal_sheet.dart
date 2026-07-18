@@ -4,10 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
 class modalsheet extends StatefulWidget {
-  modalsheet({super.key, required this.userid, required this.store});
+  modalsheet({
+    super.key,
+    required this.userid,
+    required this.store,
+    required this.getusers,
+  });
   final String userid;
   final List<Map<String, dynamic>> store;
 
+  final VoidCallback getusers;
   @override
   State<modalsheet> createState() => _modalsheetState();
 }
@@ -37,13 +43,29 @@ share option to different socials
     );
   }
 
+  Future<void> updateuser(Map<String, dynamic> user) async {
+    '''
+this function basically updtaes user to firestore straight before bumpting to local list
+''';
+    try {
+      _data
+          .doc('123')
+          .collection('users')
+          .doc(widget.userid)
+          .collection('folks')
+          .add(user);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<void> adduser(String userid) async {
     '''
   this basically add users to collection
 
   ''';
     try {
-      final datavar = _data
+      final sendrequest = _data
           .doc('123')
           .collection('users')
           .doc(userid)
@@ -51,7 +73,7 @@ share option to different socials
           .snapshots()
           .map((doc) => doc.docs);
 
-      await for (var data in datavar) {
+      await for (var data in sendrequest) {
         //fetches modified data from dbs
         if (!mounted) return;
 
@@ -60,23 +82,21 @@ share option to different socials
         for (final singlet in data) {
           final datum = singlet.data();
           final docid = singlet.id;
+          final userid = datum['userid'];
           final Map<String, dynamic> user = {'docid': docid, 'data': datum};
-
           setState(() {
-            widget.store.add(user);
+            updateuser(user);
+            widget.getusers();
             widget.store.isNotEmpty ? saved = true : saved = false;
             saved == true ? Navigator.pop(context) : print('awaiting');
           });
-          for (int i = 0; i < widget.store.length; i++) {
-            if (widget.store[i]['docid'] == docid) {
-              print('this user exist ${widget.store}');
-            } else {
-              setState(() {
-                widget.store.add(user);
-                print(' new user added ${widget.store}');
-              });
-            }
-          }
+          // for (int i = 0; i < widget.store.length; i++) {
+          //   if (widget.store[i]['data']['userid'] == userid) {
+          //     print('this user exist ${widget.store}');
+          //   } else {
+          //     print('this user added');
+          //   }
+          // }
         }
       }
     } catch (e) {
@@ -88,7 +108,6 @@ share option to different socials
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _get_users();
   }
 
   @override
@@ -245,7 +264,6 @@ share option to different socials
                         child: ElevatedButton(
                           onPressed: () {
                             adduser(useridstr.text);
-                            print('omo we try ${widget.store}');
                           },
                           style: ButtonStyle(
                             alignment: Alignment.center,
