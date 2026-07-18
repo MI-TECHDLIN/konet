@@ -20,7 +20,7 @@ class inbox_card extends StatelessWidget {
   String newthread;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(builder: (c) => ChatScreen(userid: userid)),

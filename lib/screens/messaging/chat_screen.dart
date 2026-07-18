@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:konet/screens/messaging/widget/message_card.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({required this.userid});
+  const ChatScreen({super.key, required this.userid});
   final String userid;
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -16,7 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final _authinbox = FirebaseAuth.instance;
   final _cloudmessage = FirebaseFirestore.instance;
   String? get _currentemail => _authinbox.currentUser?.email;
-  String? _displayname = 'User 01';
+  final String _displayname = 'User 01';
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
   int? _responseint;
   List<Map<String, dynamic>> data = [];
@@ -31,10 +31,9 @@ class _ChatScreenState extends State<ChatScreen> {
         .map((snap) => snap.docs);
 
     await for (var doc in docs) {
-      var _data = doc;
-      print('this is th is bro data ${_data}');
+      var data = doc;
+      print('this is th is bro data $data');
     }
-    ;
   }
 
   Widget get _emptystate => Container(
