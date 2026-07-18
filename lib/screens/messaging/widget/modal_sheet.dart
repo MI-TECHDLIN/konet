@@ -85,19 +85,52 @@ this function basically updtaes user to firestore straight before bumpting to lo
           final userid = datum['userid'];
           final Map<String, dynamic> user = {'docid': docid, 'data': datum};
 
-          setState(() {
-            updateuser(user);
+          if (widget.store.isNotEmpty) {
+            for (int i = 0; i <= widget.store.length; i++) {
+              if (widget.store[i]['data']['userid'] == userid) {
+                '''
+iteration of to figure out if a object list is empty or not 
 
-            widget.store.isEmpty ? saved = false : saved = true;
-            saved == true ? Navigator.pop(context) : print('awaiting');
-          });
-          // for (int i = 0; i < widget.store.length; i++) {
-          //   if (widget.store[i]['data']['userid'] == userid) {
-          //     print('this user exist ${widget.store}');
-          //   } else {
-          //     print('this user added');
-          //   }
-          // }
+''';
+                print('this user exist ${widget.store}');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  snackBarAnimationStyle: AnimationStyle(
+                    duration: Duration(seconds: 1),
+                    reverseDuration: Duration(seconds: 1),
+                  ),
+                  SnackBar(
+                    margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height - 120,
+                      left: 16,
+                      right: 16,
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    dismissDirection: DismissDirection.up,
+                    backgroundColor: Colors.red,
+                    content: Text(
+                      'This user exist as a Friend add a new friend',
+                    ),
+                  ),
+                );
+                return;
+              } else {
+                setState(() {
+                  updateuser(user);
+
+                  widget.store.isEmpty ? saved = false : saved = true;
+                  saved == true ? Navigator.pop(context) : print('awaiting');
+                  print('this user added');
+                });
+              }
+            }
+          } else {
+            setState(() {
+              updateuser(user);
+              saved = true;
+              saved == true ? Navigator.pop(context) : print('awaiting');
+              print('this user added');
+            });
+          }
         }
       }
     } catch (e) {
