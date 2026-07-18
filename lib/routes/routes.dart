@@ -26,7 +26,6 @@ class _RoutesState extends State<Routes> {
   var grad1 = 0xffFF6A88;
   User? get user => _auth.currentUser;
   var userid = '';
-  var linkid = '';
 
   String get config => _auth.currentUser!.uid;
 
@@ -39,16 +38,6 @@ class _RoutesState extends State<Routes> {
     final SharedPreferences preference = await SharedPreferences.getInstance();
 
     await preference.setString('id', id);
-  }
-
-  Future<String?> getId() async {
-    final SharedPreferences preference = await SharedPreferences.getInstance();
-
-    setState(() {
-      linkid = preference.getString('id')!;
-    });
-
-    return linkid;
   }
 
   void useridGenertaor() {
@@ -177,7 +166,6 @@ and gives a generic
   void initState() {
     // TODO: implement initState
     super.initState();
-    getId();
   }
 
   @override
@@ -416,14 +404,11 @@ and gives a generic
                         page_btn(btn_text[1], () {
                           updatedisplayname(_usernamecontroller.text);
                           _store_user();
-                          print('dude see your id $linkid');
 
                           Future.delayed(const Duration(seconds: 2)).then((v) {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(
-                                builder: (c) => InboxScreen(id: currentUserId),
-                              ),
+                              MaterialPageRoute(builder: (c) => InboxScreen()),
                             );
                           });
                         }),
@@ -433,7 +418,7 @@ and gives a generic
                 ],
               );
             } else if (snapshot.hasData && snapshot.data!.displayName != null) {
-              return InboxScreen(id: linkid);
+              return InboxScreen();
             }
           }
           return RegistrationScreen();

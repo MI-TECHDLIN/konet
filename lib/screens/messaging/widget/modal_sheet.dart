@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
 class modalsheet extends StatefulWidget {
-  modalsheet({
+  const modalsheet({
     super.key,
     required this.userid,
     required this.store,
@@ -84,10 +84,11 @@ this function basically updtaes user to firestore straight before bumpting to lo
           final docid = singlet.id;
           final userid = datum['userid'];
           final Map<String, dynamic> user = {'docid': docid, 'data': datum};
+
           setState(() {
             updateuser(user);
-            widget.getusers();
-            widget.store.isNotEmpty ? saved = true : saved = false;
+
+            widget.store.isEmpty ? saved = false : saved = true;
             saved == true ? Navigator.pop(context) : print('awaiting');
           });
           // for (int i = 0; i < widget.store.length; i++) {
@@ -132,7 +133,6 @@ this function basically updtaes user to firestore straight before bumpting to lo
                 'Share your code or enter a friend\'s',
                 style: TextStyle(color: Color(0xff6B7280)),
               ),
-
               GestureDetector(
                 onTap: () => copybiloard(context),
                 child: Container(
