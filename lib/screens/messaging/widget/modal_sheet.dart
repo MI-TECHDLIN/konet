@@ -4,10 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
 class modalsheet extends StatefulWidget {
-  modalsheet({super.key, required this.userid, required this.store});
+  const modalsheet({
+    super.key,
+    required this.userid,
+    required this.store,
+    required this.getusers,
+  });
   final String userid;
   final List<Map<String, dynamic>> store;
 
+  final VoidCallback getusers;
   @override
   State<modalsheet> createState() => _modalsheetState();
 }
@@ -37,13 +43,29 @@ share option to different socials
     );
   }
 
+  Future<void> updateuser(Map<String, dynamic> user) async {
+    '''
+this function basically updtaes user to firestore straight before bumpting to local list
+''';
+    try {
+      _data
+          .doc('123')
+          .collection('users')
+          .doc(widget.userid)
+          .collection('folks')
+          .add(user);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<void> adduser(String userid) async {
     '''
   this basically add users to collection
 
   ''';
     try {
-      final datavar = _data
+      final sendrequest = _data
           .doc('123')
           .collection('users')
           .doc(userid)
@@ -51,7 +73,7 @@ share option to different socials
           .snapshots()
           .map((doc) => doc.docs);
 
-      await for (var data in datavar) {
+      await for (var data in sendrequest) {
         //fetches modified data from dbs
         if (!mounted) return;
 
@@ -60,22 +82,54 @@ share option to different socials
         for (final singlet in data) {
           final datum = singlet.data();
           final docid = singlet.id;
+          final userid = datum['userid'];
           final Map<String, dynamic> user = {'docid': docid, 'data': datum};
 
-          setState(() {
-            widget.store.add(user);
-            widget.store.isNotEmpty ? saved = true : saved = false;
-            saved == true ? Navigator.pop(context) : print('awaiting');
-          });
-          for (int i = 0; i < widget.store.length; i++) {
-            if (widget.store[i]['docid'] == docid) {
-              print('this user exist ${widget.store}');
-            } else {
-              setState(() {
-                widget.store.add(user);
-                print(' new user added ${widget.store}');
-              });
+          if (widget.store.isNotEmpty) {
+            for (int i = 0; i <= widget.store.length; i++) {
+              if (widget.store[i]['data']['userid'] == userid) {
+                '''
+iteration of to figure out if a object list is empty or not 
+
+''';
+                print('this user exist ${widget.store}');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  snackBarAnimationStyle: AnimationStyle(
+                    duration: Duration(seconds: 1),
+                    reverseDuration: Duration(seconds: 1),
+                  ),
+                  SnackBar(
+                    margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height - 120,
+                      left: 16,
+                      right: 16,
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    dismissDirection: DismissDirection.up,
+                    backgroundColor: Colors.red,
+                    content: Text(
+                      'This user exist as a Friend add a new friend',
+                    ),
+                  ),
+                );
+                return;
+              } else {
+                setState(() {
+                  updateuser(user);
+
+                  widget.store.isEmpty ? saved = false : saved = true;
+                  saved == true ? Navigator.pop(context) : print('awaiting');
+                  print('this user added');
+                });
+              }
             }
+          } else {
+            setState(() {
+              updateuser(user);
+              saved = true;
+              saved == true ? Navigator.pop(context) : print('awaiting');
+              print('this user added');
+            });
           }
         }
       }
@@ -88,7 +142,6 @@ share option to different socials
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _get_users();
   }
 
   @override
@@ -113,7 +166,6 @@ share option to different socials
                 'Share your code or enter a friend\'s',
                 style: TextStyle(color: Color(0xff6B7280)),
               ),
-
               GestureDetector(
                 onTap: () => copybiloard(context),
                 child: Container(
@@ -245,7 +297,6 @@ share option to different socials
                         child: ElevatedButton(
                           onPressed: () {
                             adduser(useridstr.text);
-                            print('omo we try ${widget.store}');
                           },
                           style: ButtonStyle(
                             alignment: Alignment.center,
