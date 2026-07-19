@@ -150,6 +150,7 @@ this function is used to stream  folks and stream and add them to a local var
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffF6F5F1),
       appBar: AppBar(
         toolbarHeight: 70,
