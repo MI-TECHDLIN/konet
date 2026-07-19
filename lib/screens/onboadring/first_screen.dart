@@ -3,6 +3,7 @@ import 'package:konet/constant/constant.dart';
 import 'package:konet/screens/onboadring/widgets/o_widgets.dart';
 import 'package:konet/screens/onboadring/widgets/page_btn.dart';
 
+// ignore: must_be_immutable
 class FirstScreen extends StatefulWidget {
   FirstScreen({super.key, required this.onpress});
 
@@ -20,7 +21,7 @@ class _FirstScreenState extends State<FirstScreen> {
         Positioned(
           left: 98,
 
-          child: Text(
+          child: const Text(
             'konet',
             style: TextStyle(
               fontSize: 100,
@@ -36,7 +37,7 @@ class _FirstScreenState extends State<FirstScreen> {
           child: SizedBox(
             height: 60,
             width: 260,
-            child: Text(
+            child: const Text(
               'a quiet place to talk to the people you love.',
               textAlign: .center,
               style: TextStyle(
@@ -87,7 +88,7 @@ class _FirstScreenState extends State<FirstScreen> {
               }),
 
               SizedBox(height: 18),
-              Text(
+              const Text(
                 'By continuing, you agree to our quiet terms.'
                 '',
                 style: TextStyle(

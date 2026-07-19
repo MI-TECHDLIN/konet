@@ -3,36 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:konet/screens/messaging/widget/message_card.dart';
 
-class InboxScreen extends StatefulWidget {
-  const InboxScreen({super.key});
-
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key, required this.userid});
+  final String userid;
   @override
-  State<InboxScreen> createState() => _InboxScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _InboxScreenState extends State<InboxScreen> {
+class _ChatScreenState extends State<ChatScreen> {
   //variables
   final _textcontorlller = TextEditingController();
   final _authinbox = FirebaseAuth.instance;
   final _cloudmessage = FirebaseFirestore.instance;
   String? get _currentemail => _authinbox.currentUser?.email;
-  String? _displayname = 'User 01';
+  final String _displayname = 'User 01';
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
   int? _responseint;
   List<Map<String, dynamic>> data = [];
-  int? color1 = 0xffF093FB;
-  int? color2 = 0xffF5576C;
 
   //functions
-  Stream<String?> _getDisplayNameStream() {
-    return _authinbox.userChanges().map((User? user) {
-      if (user!.displayName != null) {
-        _displayname = user.displayName;
-        return _displayname;
-      } else {
-        return null;
-      }
-    });
+  Future<void> getUserDetials() async {
+    var docs = _cloudmessage
+        .collection('users')
+        .doc(widget.userid)
+        .collection('details')
+        .snapshots()
+        .map((snap) => snap.docs);
+
+    await for (var doc in docs) {
+      var data = doc;
+      print('this is th is bro data $data');
+    }
   }
 
   Widget get _emptystate => Container(
@@ -67,7 +68,7 @@ class _InboxScreenState extends State<InboxScreen> {
       ? MessageCard(
           0,
           24,
-
+          id: 'lol',
           messagestring: data[index]['text'],
           calcheight: data[index]['text'],
           position: EdgeInsets.fromLTRB(130.61, 0, 16, 10),
@@ -78,7 +79,7 @@ class _InboxScreenState extends State<InboxScreen> {
       : MessageCard(
           24,
           0,
-
+          id: 'lol',
           messagestring: data[index]['text'],
           calcheight: data[index]['text'],
           position: EdgeInsets.fromLTRB(16, 0, 130.61, 10),
@@ -86,72 +87,52 @@ class _InboxScreenState extends State<InboxScreen> {
           textcolor: Colors.black,
         );
 
-  Future<void> sendMEssage(String nuggets) async {
-    await _cloudmessage.collection('messages').add({
-      'sender': _authinbox.currentUser!.email,
-      'text': nuggets,
-    });
-  }
-
-  Future<void> _profileresponse() async {
-    var _resonse = await _cloudmessage
-        .collection('users')
-        .doc()
-        .collection('details')
-        .snapshots()
-        .map((snap) => snap.docs);
-
-    await for (List<QueryDocumentSnapshot>? docs in _resonse) {
-      print('new update');
-
-      for (final doc in docs!) {
-        final datum = doc.data() as Map<String, dynamic>;
-        ;
-
-        var color = datum['profile-color'];
-        color1 = color['color1'];
-        color2 = color['color2'];
-      }
-    }
-  }
+  // Future<void> sendMEssage(String nuggets) async {
+  //   await _cloudmessage.doc(widget.id).collection('messages').add({
+  //     'sender': _authinbox.currentUser!.email,
+  //     'text': nuggets,
+  //   });
+  // }
 
   // TODO: modify functions in a way it getts message based on user id not a globsl fetching
-  Future<void> _messageResponse() async {
-    _response = _cloudmessage
-        .collection('messages')
-        .snapshots()
-        .map((snap) => snap.docs);
+  //   Future<void> _messageResponse() async {
+  //     _response = _cloudmessage
+  //         .doc(widget.id)
+  //         .collection('messages')
+  //         .snapshots()
+  //         .map((snap) => snap.docs);
 
-    '''
-message response is using a stream sequence 
-to get snapshots from firestore for updates and to get documents stored
+  //     '''
+  // message response is using a stream sequence
+  // to get snapshots from firestore for updates and to get documents stored
 
-''';
+  // ''';
 
-    await for (List<QueryDocumentSnapshot> docs in _response!) {
-      print('New Update');
+  //     await for (List<QueryDocumentSnapshot> docs in _response!) {
+  //       print('New Update');
 
-      //length for all response
-      _responseint = docs.length;
+  //       //length for all response
+  //       _responseint = docs.length;
 
-      data.clear();
+  //       data.clear();
 
-      // This loops through each individual document in the current list]
-      for (final doc in docs) {
-        final datum = doc.data() as Map<String, dynamic>;
-        print('Message ID: ${doc.id}, Content: ${datum['text']}');
-        data.add(datum);
-      }
-    }
-  }
+  //       // This loops through each individual document in the current list]
+  //       for (final doc in docs) {
+  //         final datum = doc.data() as Map<String, dynamic>;
+  //         print('Message ID: ${doc.id}, Content: ${datum['text']}');
+  //         data.add(datum);
+  //       }
+  //     }
+  //   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getUserDetials();
 
-    _getDisplayNameStream();
-    _messageResponse();
+    // _getDisplayNameStream();
+    // _messageResponse();
   }
 
   @override
@@ -165,15 +146,6 @@ to get snapshots from firestore for updates and to get documents stored
         backgroundColor: Color(0xffF6F5F1), // shadowColor: Color(0xffF6F5F1),
 
         toolbarHeight: 70,
-        leading: Container(
-          padding: EdgeInsets.all(8.0),
-          margin: EdgeInsets.only(left: 20),
-          child: IconButton(
-            //TODO: make this button active ones i build the home screen
-            onPressed: null,
-            icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 21),
-          ),
-        ),
 
         title: Row(
           children: [
@@ -196,22 +168,22 @@ to get snapshots from firestore for updates and to get documents stored
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                StreamBuilder(
-                  stream: _getDisplayNameStream(),
-                  builder: (context, asyncSnapshot) {
-                    if (_authinbox.currentUser!.displayName != null) {
-                      return Text(
-                        _displayname!,
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      );
-                    } else {
-                      return Text(
-                        _displayname!,
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      );
-                    }
-                  },
-                ),
+                // StreamBuilder(
+                //   stream: _getDisplayNameStream(),
+                //   builder: (context, asyncSnapshot) {
+                //     if (_authinbox.currentUser!.displayName != null) {
+                //       return Text(
+                //         _displayname!,
+                //         style: TextStyle(fontWeight: FontWeight.w700),
+                //       );
+                //     } else {
+                //       return Text(
+                //         _displayname!,
+                //         style: TextStyle(fontWeight: FontWeight.w700),
+                //       );
+                //     }
+                //   },
+                // ),
                 Text(
                   'online',
                   style: TextStyle(
@@ -231,7 +203,10 @@ to get snapshots from firestore for updates and to get documents stored
           child: Column(
             children: [
               StreamBuilder<QuerySnapshot?>(
-                stream: _cloudmessage.collection('messages').snapshots(),
+                stream: _cloudmessage
+                    .doc(widget.userid)
+                    .collection('messages')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -271,7 +246,7 @@ to get snapshots from firestore for updates and to get documents stored
                 child: TextField(
                   controller: _textcontorlller,
                   onSubmitted: (text) {
-                    sendMEssage(_textcontorlller.text);
+                    // sendMEssage(_textcontorlller.text);
                     _textcontorlller.clear();
                   },
                   decoration: InputDecoration(

@@ -26,6 +26,12 @@ class KonetApp extends StatefulWidget {
 
 class _KonetAppState extends State<KonetApp> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false, home: Routes());
   }

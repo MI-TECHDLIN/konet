@@ -25,7 +25,7 @@ class _thread_selectorState extends State<thread_selector> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(40, 15, 18, 10),
+      margin: const EdgeInsets.fromLTRB(50, 15, 18, 10),
       child: Row(
         children: [
           InkWell(
