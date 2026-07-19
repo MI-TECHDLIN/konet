@@ -61,7 +61,8 @@ this function basically updtaes user to firestore straight before bumpting to lo
 
   Future<void> adduser(String userid) async {
     '''
-  this basically add users to collection
+fetches folks datas
+  and basically add users to collection
 
   ''';
     try {
@@ -75,7 +76,7 @@ this function basically updtaes user to firestore straight before bumpting to lo
 
       await for (var data in sendrequest) {
         //fetches modified data from dbs
-        if (!mounted) return;
+        // if (!mounted) return;
 
         print('newuuupdate');
 
@@ -84,52 +85,67 @@ this function basically updtaes user to firestore straight before bumpting to lo
           final docid = singlet.id;
           final userid = datum['userid'];
           final Map<String, dynamic> user = {'docid': docid, 'data': datum};
+          print('this is user intails ${user}');
+          if (widget.userid == userid) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              snackBarAnimationStyle: AnimationStyle(
+                duration: Duration(seconds: 1),
+                reverseDuration: Duration(seconds: 1),
+              ),
+              SnackBar(
+                dismissDirection: DismissDirection.up,
+                backgroundColor: Colors.green,
 
+                behavior: SnackBarBehavior.floating,
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).size.height - 120,
+                  left: 16,
+                  right: 16,
+                ),
+                content: Text('but you can\'t add yourself'),
+              ),
+            );
+            print('you  can\'t add yourself! try adding your friends');
+            return;
+          }
+
+          //checking if user exist
+
+          bool userAlreadyexists = false;
           if (widget.store.isNotEmpty) {
-            for (int i = 0; i <= widget.store.length; i++) {
-              if (widget.store[i]['data']['userid'] == userid) {
-                '''
-iteration of to figure out if a object list is empty or not 
+            userAlreadyexists = widget.store.any(
+              (item) => item['data']['userid'] == userid,
+            );
+          }
 
-''';
-                print('this user exist ${widget.store}');
-                ScaffoldMessenger.of(context).showSnackBar(
-                  snackBarAnimationStyle: AnimationStyle(
-                    duration: Duration(seconds: 1),
-                    reverseDuration: Duration(seconds: 1),
-                  ),
-                  SnackBar(
-                    margin: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).size.height - 120,
-                      left: 16,
-                      right: 16,
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                    dismissDirection: DismissDirection.up,
-                    backgroundColor: Colors.red,
-                    content: Text(
-                      'This user exist as a Friend add a new friend',
-                    ),
-                  ),
-                );
-                return;
-              } else {
-                setState(() {
-                  updateuser(user);
+          //function as a boolean expression
+          if (userAlreadyexists) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                dismissDirection: DismissDirection.up,
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).size.height - 120,
+                  left: 16,
+                  right: 16,
+                ),
+                content: Text('This is user exist ! try adding a new user'),
+              ),
+            );
+            print('this is user already exist');
+            return;
+          }
+          setState(() {
+            updateuser(user);
+            saved = true;
+            print('user added');
+          });
 
-                  widget.store.isEmpty ? saved = false : saved = true;
-                  saved == true ? Navigator.pop(context) : print('awaiting');
-                  print('this user added');
-                });
-              }
-            }
+          if (saved == true) {
+            Navigator.pop(context);
           } else {
-            setState(() {
-              updateuser(user);
-              saved = true;
-              saved == true ? Navigator.pop(context) : print('awaiting');
-              print('this user added');
-            });
+            print('awaiting request');
           }
         }
       }
