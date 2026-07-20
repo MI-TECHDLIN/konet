@@ -20,7 +20,7 @@ class modalsheet extends StatefulWidget {
 
 class _modalsheetState extends State<modalsheet> {
   bool saved = false;
-
+  String messageid = '';
   final _data = FirebaseFirestore.instance.collection('database');
   final TextEditingController useridstr = TextEditingController();
   //functions
@@ -41,6 +41,48 @@ share option to different socials
       widget.userid,
       subject: 'share unique code to add friend ${widget.userid} ',
     );
+  }
+
+  void idgenerator() {
+    List<String> randdomStr = [
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'O',
+      'P',
+      'Q',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+      'Z',
+    ];
+    List<String> randomNum = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
+    randomNum.shuffle();
+    randdomStr.shuffle();
+
+    var threerandNum = randomNum[0] + randomNum[1] + randomNum[2];
+    var threerandStr = randdomStr[0] + randdomStr[1] + randdomStr[2];
+
+    setState(() {
+      messageid = 'id-${threerandStr + threerandNum}';
+    });
   }
 
   Future<void> updateuser(Map<String, dynamic> user) async {
@@ -84,8 +126,12 @@ fetches folks datas
           final datum = singlet.data();
           final docid = singlet.id;
           final userid = datum['userid'];
-          final Map<String, dynamic> user = {'docid': docid, 'data': datum};
-          print('this is user intails ${user}');
+          final Map<String, dynamic> user = {
+            'docid': docid,
+            'data': datum,
+            'messageid': messageid,
+          };
+          print('this is user intails $user');
           if (widget.userid == userid) {
             ScaffoldMessenger.of(context).showSnackBar(
               snackBarAnimationStyle: AnimationStyle(
@@ -94,7 +140,7 @@ fetches folks datas
               ),
               SnackBar(
                 dismissDirection: DismissDirection.up,
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.blueAccent,
 
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.only(
@@ -158,6 +204,7 @@ fetches folks datas
   void initState() {
     // TODO: implement initState
     super.initState();
+    idgenerator();
   }
 
   @override
@@ -317,7 +364,7 @@ fetches folks datas
                           style: ButtonStyle(
                             alignment: Alignment.center,
                             backgroundColor: WidgetStatePropertyAll(
-                              Color(0xff4F46E5),
+                              Color(0xFF4666E5),
                             ),
                           ),
 

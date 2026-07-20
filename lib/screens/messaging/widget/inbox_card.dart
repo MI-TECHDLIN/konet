@@ -4,17 +4,21 @@ import 'package:konet/screens/messaging/chat_screen.dart';
 class inbox_card extends StatelessWidget {
   inbox_card({
     super.key,
-    required this.userid,
+    required this.messageid,
+    required this.s_userid,
+    required this.r_userid,
+
     required this.grad1,
     required this.grad2,
     required this.label,
     required this.displayname,
     required this.newthread,
   });
-
+  String s_userid;
+  String r_userid;
+  String messageid;
   int grad1;
   int grad2;
-  String userid;
   String label;
   String displayname;
   String newthread;
@@ -23,7 +27,13 @@ class inbox_card extends StatelessWidget {
     return InkWell(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (c) => ChatScreen(userid: userid)),
+        MaterialPageRoute(
+          builder: (c) => ChatScreen(
+            messageid: messageid,
+            s_userid: s_userid,
+            r_userid: r_userid,
+          ),
+        ),
       ),
       child: Container(
         alignment: Alignment.center,

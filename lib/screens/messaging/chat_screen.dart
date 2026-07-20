@@ -1,38 +1,74 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:konet/constant/function.dart';
 import 'package:konet/screens/messaging/widget/message_card.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.userid});
-  final String userid;
+  const ChatScreen({
+    super.key,
+    required this.messageid,
+    required this.s_userid,
+    required this.r_userid,
+  });
+  final String s_userid;
+  final String r_userid;
+  final String messageid;
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   //variables
+  int color1 = 0xffF093FB;
+  int color2 = 0xFF57F5A9;
+
   final _textcontorlller = TextEditingController();
-  final _authinbox = FirebaseAuth.instance;
-  final _cloudmessage = FirebaseFirestore.instance;
-  String? get _currentemail => _authinbox.currentUser?.email;
-  final String _displayname = 'User 01';
+  final _cloudmessage = FirebaseFirestore.instance.collection('database');
+  String _displayname = 'User 01';
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
   int? _responseint;
   List<Map<String, dynamic>> data = [];
+  Map<String, dynamic> user_data = {};
 
-  //functions
+  // // functions
   Future<void> getUserDetials() async {
+    '''
+this function is triggered to fecth folks profile data in the chat sreen
+
+
+''';
+    //TODO: later abstraction is to to modify the deatils
     var docs = _cloudmessage
+        .doc('123')
         .collection('users')
-        .doc(widget.userid)
+        .doc(widget.r_userid)
         .collection('details')
         .snapshots()
-        .map((snap) => snap.docs);
+        .map((c) => c.docs);
 
     await for (var doc in docs) {
-      var data = doc;
-      print('this is th is bro data $data');
+      print('newupdate');
+
+      for (var profile in doc) {
+        var datum = profile.data();
+        _displayname = datum['username'];
+
+        setState(() {
+          color1 =
+              0xff +
+              int.parse(
+                intColorConverter(datum['profile-color'][0]),
+                radix: 16,
+              );
+          color2 =
+              0xff +
+              int.parse(
+                intColorConverter(datum['profile-color'][1]),
+                radix: 16,
+              );
+        });
+      }
     }
   }
 
@@ -64,7 +100,8 @@ class _ChatScreenState extends State<ChatScreen> {
       ],
     ),
   );
-  Widget _messagestate(int index) => _currentemail == data[index]['sender']
+  Widget _messagestate(int index) => widget.s_userid == data[index]['sender']
+      // a better way of sorting messages
       ? MessageCard(
           0,
           24,
@@ -87,43 +124,52 @@ class _ChatScreenState extends State<ChatScreen> {
           textcolor: Colors.black,
         );
 
-  // Future<void> sendMEssage(String nuggets) async {
-  //   await _cloudmessage.doc(widget.id).collection('messages').add({
-  //     'sender': _authinbox.currentUser!.email,
-  //     'text': nuggets,
-  //   });
-  // }
+  Future<void> sendMEssage(String nuggets) async {
+    await _cloudmessage
+        .doc('123')
+        .collection('messages')
+        .doc(widget.messageid)
+        .collection('usermessage')
+        .add({
+          'sender': widget.s_userid,
+          'text': nuggets,
+          'id': widget.messageid,
+        });
+    print('this is the sender ${widget.s_userid}');
+  }
 
   // TODO: modify functions in a way it getts message based on user id not a globsl fetching
-  //   Future<void> _messageResponse() async {
-  //     _response = _cloudmessage
-  //         .doc(widget.id)
-  //         .collection('messages')
-  //         .snapshots()
-  //         .map((snap) => snap.docs);
+  Future<void> _messageResponse() async {
+    _response = _cloudmessage
+        .doc('123')
+        .collection('messages')
+        .doc(widget.messageid)
+        .collection('usermessage')
+        .snapshots()
+        .map((snap) => snap.docs);
 
-  //     '''
-  // message response is using a stream sequence
-  // to get snapshots from firestore for updates and to get documents stored
+    '''s
+  message response is using a stream sequence
+  to get snapshots from firestore for updates and to get documents stored
 
-  // ''';
+  ''';
 
-  //     await for (List<QueryDocumentSnapshot> docs in _response!) {
-  //       print('New Update');
+    await for (List<QueryDocumentSnapshot> docs in _response!) {
+      print('New Update');
 
-  //       //length for all response
-  //       _responseint = docs.length;
+      //length for all response
+      _responseint = docs.length;
 
-  //       data.clear();
+      data.clear();
 
-  //       // This loops through each individual document in the current list]
-  //       for (final doc in docs) {
-  //         final datum = doc.data() as Map<String, dynamic>;
-  //         print('Message ID: ${doc.id}, Content: ${datum['text']}');
-  //         data.add(datum);
-  //       }
-  //     }
-  //   }
+      // This loops through each individual document in the current list]
+      for (final doc in docs) {
+        final datum = doc.data() as Map<String, dynamic>;
+        print('Message ID: ${doc.id}, Content: ${datum['text']}');
+        data.add(datum);
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -132,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> {
     getUserDetials();
 
     // _getDisplayNameStream();
-    // _messageResponse();
+    _messageResponse();
   }
 
   @override
@@ -159,7 +205,7 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(9999),
                 gradient: LinearGradient(
-                  colors: [Color(0xff84FAB0), Color(0xff8FD3F4)],
+                  colors: [Color(color1), Color(color2)],
                 ),
               ),
               child: Image.asset('assets/image/profile.png', scale: 2.0),
@@ -168,22 +214,8 @@ class _ChatScreenState extends State<ChatScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // StreamBuilder(
-                //   stream: _getDisplayNameStream(),
-                //   builder: (context, asyncSnapshot) {
-                //     if (_authinbox.currentUser!.displayName != null) {
-                //       return Text(
-                //         _displayname!,
-                //         style: TextStyle(fontWeight: FontWeight.w700),
-                //       );
-                //     } else {
-                //       return Text(
-                //         _displayname!,
-                //         style: TextStyle(fontWeight: FontWeight.w700),
-                //       );
-                //     }
-                //   },
-                // ),
+                Text(_displayname),
+
                 Text(
                   'online',
                   style: TextStyle(
@@ -204,8 +236,10 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               StreamBuilder<QuerySnapshot?>(
                 stream: _cloudmessage
-                    .doc(widget.userid)
+                    .doc('123')
                     .collection('messages')
+                    .doc(widget.messageid)
+                    .collection('usermessage')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -246,7 +280,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: TextField(
                   controller: _textcontorlller,
                   onSubmitted: (text) {
-                    // sendMEssage(_textcontorlller.text);
+                    sendMEssage(_textcontorlller.text);
                     _textcontorlller.clear();
                   },
                   decoration: InputDecoration(
