@@ -5,6 +5,7 @@ import 'package:konet/screens/messaging/widget/modal_sheet.dart';
 import 'package:konet/screens/messaging/widget/pineed_widget.dart';
 import 'package:konet/screens/messaging/widget/thread_selector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:konet/constant/function.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -44,35 +45,6 @@ custom functions to get users id from localsotrage
     getfolks();
 
     return linkid;
-  }
-
-  String intColorConverter(int decimalValue) {
-    '''
-a function that recives decmial values and converts to hexcodes 
-''';
-    if (decimalValue == 0) return '0';
-
-    String hexResult = '';
-
-    while (decimalValue > 0) {
-      int remainder = decimalValue % 16;
-
-      String hexDigit = switch (remainder) {
-        10 => 'A',
-        11 => 'B',
-        12 => 'C',
-        13 => 'D',
-        14 => 'E',
-        15 => 'F',
-        _ => remainder.toString(), // For 0-9, just keep the number as a string
-      };
-
-      hexResult = hexDigit + hexResult;
-
-      decimalValue = decimalValue ~/ 16;
-    }
-
-    return hexResult;
   }
 
   final _accountinstance = FirebaseFirestore.instance.collection('database');
@@ -282,7 +254,7 @@ this function is used to stream  folks and stream and add them to a local var
                   //modal userdatas for other users
                   Map<String, dynamic> eprofile = users[index]['data'];
                   String userid = eprofile['userid'];
-
+                  String messgaeid = users[index]['messageid'];
                   String username = eprofile['username'];
 
                   String abbr = username.substring(0, 2).toUpperCase();
@@ -299,7 +271,9 @@ this function is used to stream  folks and stream and add them to a local var
 
                   print('this is the datas $data');
                   return inbox_card(
-                    userid: userid,
+                    messageid: messgaeid,
+                    s_userid: linkid,
+                    r_userid: userid,
                     grad1: fColor,
                     grad2: sColor,
                     label: abbr,

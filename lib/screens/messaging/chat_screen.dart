@@ -33,6 +33,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // // functions
   Future<void> getUserDetials() async {
+    '''
+this function is triggered to fecth folks profile data in the chat sreen
+
+
+''';
+    //TODO: later abstraction is to to modify the deatils
     var docs = _cloudmessage
         .doc('123')
         .collection('users')
@@ -123,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .doc('123')
         .collection('messages')
         .doc(widget.messageid)
-        .collection('usermesssage')
+        .collection('usermessage')
         .add({
           'sender': widget.s_userid,
           'text': nuggets,
@@ -136,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _messageResponse() async {
     _response = _cloudmessage
         .doc('123')
-        .collection('message')
+        .collection('messages')
         .doc(widget.messageid)
         .collection('usermessage')
         .snapshots()
@@ -231,9 +237,9 @@ class _ChatScreenState extends State<ChatScreen> {
               StreamBuilder<QuerySnapshot?>(
                 stream: _cloudmessage
                     .doc('123')
-                    .collection('users')
-                    .doc(widget.s_userid)
                     .collection('messages')
+                    .doc(widget.messageid)
+                    .collection('usermessage')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
