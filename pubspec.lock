@@ -440,8 +440,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-<<<<<<< HEAD
-=======
   pub_semver:
     dependency: transitive
     description:
@@ -458,7 +456,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
->>>>>>> 3bc49daf35a7d91865af5adf9c825bbb72cc2b46
   searchfield:
     dependency: "direct main"
     description:
@@ -467,8 +464,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-<<<<<<< HEAD
-=======
   share_plus:
     dependency: "direct main"
     description:
@@ -541,7 +536,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
->>>>>>> 3bc49daf35a7d91865af5adf9c825bbb72cc2b46
   sky_engine:
     dependency: transitive
     description: flutter
