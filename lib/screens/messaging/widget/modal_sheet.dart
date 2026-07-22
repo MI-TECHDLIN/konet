@@ -15,16 +15,17 @@ class modalsheet extends StatefulWidget {
   final List<Map<String, dynamic>> store;
 
   final VoidCallback getusers;
+
   @override
   State<modalsheet> createState() => _modalsheetState();
 }
 
 class _modalsheetState extends State<modalsheet> {
   bool saved = false;
+  bool exist = false;
   String messageid = '';
   Map<String, dynamic> _user = {};
 
-  bool useradded = false;
   final _data = FirebaseFirestore.instance.collection('database');
   final TextEditingController useridstr = TextEditingController();
   //functions
@@ -90,6 +91,7 @@ share option to different socials
     });
   }
 
+  //core functions for sorting and checking folkslogs
   Future<void> userdata(String userid, String messageid) async {
     final sendrequest = _data
         .doc('123')
@@ -104,17 +106,21 @@ share option to different socials
       // if (!mounted) return;
 
       print('newuuupdate');
+      if (!mounted) return;
 
       for (final singlet in data) {
         final userdata = singlet.data();
         final docid = singlet.id;
 
+        print(_user);
+        _user = {'docid': docid, 'data': userdata, 'messageid': messageid};
+        await updateuser(_user);
+
         setState(() {
-          _user = {'docid': docid, 'data': userdata, 'messageid': messageid};
-          updateuser(_user);
-          print(_user);
-          saved = true;
+          exist = true;
         });
+
+        saved && mounted ? Navigator.pop(context) : print('awaiting');
       }
     }
   }
@@ -130,20 +136,27 @@ share option to different socials
 
     await for (var snap in useer) {
       print('new folks');
+      if (!mounted) return;
+
+      bool found = false;
+      String existingMessageId = '';
 
       for (var datas in snap) {
-        var datum = datas.data();
-        var id = datum['data']['userid'];
-        var messageid = datum['messageid'];
+        final datum = datas.data();
 
-        if (id == widget.userid) {
-          userdata(userid, messageid);
-          print(' this is user was found');
+        if (datum['data']['userid'] == widget.userid) {
+          found = true;
+          existingMessageId = datum['messageid'];
+          break;
         }
-        ;
-        return;
       }
-      print('new user');
+
+      if (found) {
+        userdata(userid, existingMessageId);
+      } else {
+        adduser(userid);
+      }
+      ;
     }
   }
 
@@ -181,7 +194,7 @@ fetches folks datas
 
     await for (var data in sendrequest) {
       //fetches modified data from dbs
-      // if (!mounted) return;
+      if (!mounted) return;
 
       print('newuuupdate');
 
@@ -246,16 +259,16 @@ fetches folks datas
           print('this is user already exist');
           return;
         }
+
+        await updateuser(user);
+
         setState(() {
-          updateuser(user);
           saved = true;
           print('user added');
         });
 
-        if (saved == true) {
+        if (mounted) {
           Navigator.pop(context);
-        } else {
-          print('awaiting request');
         }
       }
     }
