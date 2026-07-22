@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:konet/constant/function.dart';
@@ -29,6 +28,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _response;
   int? _responseint;
   List<Map<String, dynamic>> data = [];
+  //   void sortChat(  List<Map<String, dynamic>>   data , DateTime time){
+  // data.sort((a,b)=>b.time)
+
+  // }
   Map<String, dynamic> user_data = {};
 
   // // functions
@@ -134,6 +137,7 @@ this function is triggered to fecth folks profile data in the chat sreen
           'sender': widget.s_userid,
           'text': nuggets,
           'id': widget.messageid,
+          'createdat': DateTime.now(),
         });
     print('this is the sender ${widget.s_userid}');
   }
@@ -145,6 +149,7 @@ this function is triggered to fecth folks profile data in the chat sreen
         .collection('messages')
         .doc(widget.messageid)
         .collection('usermessage')
+        .orderBy('createdat', descending: false)
         .snapshots()
         .map((snap) => snap.docs);
 
@@ -165,7 +170,9 @@ this function is triggered to fecth folks profile data in the chat sreen
       // This loops through each individual document in the current list]
       for (final doc in docs) {
         final datum = doc.data() as Map<String, dynamic>;
-        print('Message ID: ${doc.id}, Content: ${datum['text']}');
+        print(
+          'Message ID: ${doc.id}, Content: ${datum['text']}, time:${datum['createdat']}',
+        );
         data.add(datum);
       }
     }

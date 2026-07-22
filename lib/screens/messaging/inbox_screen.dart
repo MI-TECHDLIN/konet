@@ -16,11 +16,12 @@ class InboxScreen extends StatefulWidget {
 class _InboxScreenState extends State<InboxScreen> {
   //variables
   var linkid = '';
+  List<Map<String, dynamic>> filteredUsers = [];
 
   List data = [];
   int color1 = 0xffF093FB;
   int color2 = 0xFF57F5A9;
-
+  final SearchController _searchcontroller = SearchController();
   //uservariables
   final String _displayname = 'user01';
   final int _color1 = 0xffF093FB;
@@ -109,8 +110,23 @@ this function is used to stream  folks and stream and add them to a local var
 
           print('new users added $users');
         });
+        filteredUsers = List.from(users);
       }
     }
+  }
+
+  void filterUsers(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredUsers = List.from(users);
+      } else {
+        filteredUsers = users.where((user) {
+          final username = user['data']['username'].toLowerCase();
+
+          return username.contains(query.toLowerCase());
+        }).toList();
+      }
+    });
   }
 
   @override
@@ -169,31 +185,42 @@ this function is used to stream  folks and stream and add them to a local var
       ),
       body: Column(
         children: [
-          //search tab v1
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 15, 0, 10),
-            height: 50,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 15, 24, 10),
+            child: SearchAnchor.bar(
+              searchController: _searchcontroller,
+              barHintText: 'Search people...',
+              barBackgroundColor: WidgetStateProperty.all(Colors.white),
+              barElevation: WidgetStateProperty.all(0),
+              barShape: WidgetStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              suggestionsBuilder: (context, controller) {
+                final query = controller.text.toLowerCase();
 
-            width: 327,
+                final results = users.where((user) {
+                  final username = (user['data']['username'] as String)
+                      .toLowerCase();
 
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 14),
-                  child: Icon(Icons.search, color: Color(0xff9CA3AF)),
-                ),
+                  return username.contains(query);
+                });
 
-                SizedBox(width: 10),
-                Text('search', style: TextStyle(color: Color(0xff9CA3AF))),
-              ],
+                return results.map((user) {
+                  final profile = user['data'];
+
+                  return ListTile(
+                    title: Text(profile['username']),
+                    subtitle: Text(profile['email']),
+                    onTap: () {
+                      controller.closeView(profile['username']);
+
+                      // Open chat here if you want
+                    },
+                  );
+                });
+              },
             ),
           ),
-
-          thread_selector(),
 
           //pinned widget
           Container(
