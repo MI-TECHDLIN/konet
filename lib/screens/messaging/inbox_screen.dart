@@ -48,6 +48,26 @@ custom functions to get users id from localsotrage
   }
 
   final _accountinstance = FirebaseFirestore.instance.collection('database');
+
+  // Future<void> textuser() async {
+  //   final request = _accountinstance
+  //       .doc('123')
+  //       .collection('messages')
+  //       .doc('id-LJF041')
+  //       .collection('usermessage')
+  //       .snapshots()
+  //       .map((c) => c.docs);
+
+  //   await for (var messages in request) {
+  //     print('found a match');
+  //     for (var message in messages) {
+  //       final datum = message.data();
+
+  //       print('this is a test $datum');
+  //     }
+  //   }
+  // }
+
   Future<void> _profileresponse() async {
     '''
 this function in to get personal inform about your profile
@@ -117,6 +137,7 @@ this function is used to stream  folks and stream and add them to a local var
     // TODO: implement iniRtState
     super.initState();
     getId();
+    // textuser();
   }
 
   @override
@@ -245,40 +266,61 @@ this function is used to stream  folks and stream and add them to a local var
             ),
             width: 376,
             child: SingleChildScrollView(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: users.length,
-                itemBuilder: (ctx, index) {
-                  //streaming other users with stream
-                  //modal userdatas for other users
-                  Map<String, dynamic> eprofile = users[index]['data'];
-                  String userid = eprofile['userid'];
-                  String messgaeid = users[index]['messageid'];
-                  String username = eprofile['username'];
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _accountinstance
+                    .doc('123')
+                    .collection('users')
+                    .doc(linkid)
+                    .collection('folks')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: ((tontext, index) {
+                        //streaming other users with stream
+                        //modal userdatas for other users
+                        Map<String, dynamic> eprofile = users[index]['data'];
+                        String userid = eprofile['userid'];
+                        String messgaeid = users[index]['messageid'];
+                        String username = eprofile['username'];
 
-                  String abbr = username.substring(0, 2).toUpperCase();
-                  String email = eprofile['email'];
-                  List colors = eprofile['profile-color'];
-                  int fColor = int.parse(
-                    intColorConverter(colors[0]),
-                    radix: 16,
-                  );
-                  int sColor = int.parse(
-                    intColorConverter(colors[1]),
-                    radix: 16,
-                  );
+                        String abbr = username.substring(0, 2).toUpperCase();
+                        String email = eprofile['email'];
+                        List colors = eprofile['profile-color'];
+                        int fColor = int.parse(
+                          intColorConverter(colors[0]),
+                          radix: 16,
+                        );
+                        int sColor = int.parse(
+                          intColorConverter(colors[1]),
+                          radix: 16,
+                        );
 
-                  print('this is the datas $data');
-                  return inbox_card(
-                    messageid: messgaeid,
-                    s_userid: linkid,
-                    r_userid: userid,
-                    grad1: fColor,
-                    grad2: sColor,
-                    label: abbr,
-                    displayname: username,
-                    newthread: 'olodo uprising',
+                        print('this is the datas $data');
+
+                        return inbox_card(
+                          messageid: messgaeid,
+                          s_userid: linkid,
+                          r_userid: userid,
+                          grad1: fColor,
+                          grad2: sColor,
+                          label: abbr,
+                          displayname: username,
+                          newthread: 'olodo uprising',
+                        );
+                      }),
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return Center(
+                    child: Text(
+                      'No message yet add a friend to start chatting',
+                    ),
                   );
                 },
               ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -21,9 +22,13 @@ class modalsheet extends StatefulWidget {
 class _modalsheetState extends State<modalsheet> {
   bool saved = false;
   String messageid = '';
+  Map<String, dynamic> _user = {};
+
+  bool useradded = false;
   final _data = FirebaseFirestore.instance.collection('database');
   final TextEditingController useridstr = TextEditingController();
   //functions
+
   void copybiloard(BuildContext ctx) {
     '''
 this function is callled to fetch usercode 
@@ -85,6 +90,63 @@ share option to different socials
     });
   }
 
+  Future<void> userdata(String userid, String messageid) async {
+    final sendrequest = _data
+        .doc('123')
+        .collection('users')
+        .doc(userid)
+        .collection('details')
+        .snapshots()
+        .map((doc) => doc.docs);
+
+    await for (var data in sendrequest) {
+      //fetches modified data from dbs
+      // if (!mounted) return;
+
+      print('newuuupdate');
+
+      for (final singlet in data) {
+        final userdata = singlet.data();
+        final docid = singlet.id;
+
+        setState(() {
+          _user = {'docid': docid, 'data': userdata, 'messageid': messageid};
+          updateuser(_user);
+          print(_user);
+          saved = true;
+        });
+      }
+    }
+  }
+
+  void userchecker(String userid) async {
+    final useer = _data
+        .doc('123')
+        .collection('users')
+        .doc(userid)
+        .collection('folks')
+        .snapshots()
+        .map((doc) => doc.docs);
+
+    await for (var snap in useer) {
+      print('new folks');
+
+      for (var datas in snap) {
+        var datum = datas.data();
+        var id = datum['data']['userid'];
+        var messageid = datum['messageid'];
+
+        if (id == widget.userid) {
+          userdata(userid, messageid);
+          print(' this is user was found');
+        }
+        ;
+        return;
+      }
+      print('new user');
+    }
+  }
+
   Future<void> updateuser(Map<String, dynamic> user) async {
     '''
 this function basically updtaes user to firestore straight before bumpting to local list
@@ -105,98 +167,97 @@ this function basically updtaes user to firestore straight before bumpting to lo
     '''
 fetches folks datas
   and basically add users to collection
+  and  checks if that user  exist in another
 
   ''';
-    try {
-      final sendrequest = _data
-          .doc('123')
-          .collection('users')
-          .doc(userid)
-          .collection('details')
-          .snapshots()
-          .map((doc) => doc.docs);
 
-      await for (var data in sendrequest) {
-        //fetches modified data from dbs
-        // if (!mounted) return;
+    final sendrequest = _data
+        .doc('123')
+        .collection('users')
+        .doc(userid)
+        .collection('details')
+        .snapshots()
+        .map((doc) => doc.docs);
 
-        print('newuuupdate');
+    await for (var data in sendrequest) {
+      //fetches modified data from dbs
+      // if (!mounted) return;
 
-        for (final singlet in data) {
-          final datum = singlet.data();
-          final docid = singlet.id;
-          final userid = datum['userid'];
-          final Map<String, dynamic> user = {
-            'docid': docid,
-            'data': datum,
-            'messageid': messageid,
-          };
-          print('this is user intails $user');
-          if (widget.userid == userid) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              snackBarAnimationStyle: AnimationStyle(
-                duration: Duration(seconds: 1),
-                reverseDuration: Duration(seconds: 1),
+      print('newuuupdate');
+
+      for (final singlet in data) {
+        final datum = singlet.data();
+        final docid = singlet.id;
+        final userid = datum['userid'];
+        final Map<String, dynamic> user = {
+          'docid': docid,
+          'data': datum,
+          'messageid': messageid,
+        };
+        print('this is user intails $user');
+
+        if (widget.userid == userid) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            snackBarAnimationStyle: AnimationStyle(
+              duration: Duration(seconds: 1),
+              reverseDuration: Duration(seconds: 1),
+            ),
+            SnackBar(
+              dismissDirection: DismissDirection.up,
+              backgroundColor: Colors.blueAccent,
+
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height - 120,
+                left: 16,
+                right: 16,
               ),
-              SnackBar(
-                dismissDirection: DismissDirection.up,
-                backgroundColor: Colors.blueAccent,
+              content: Text('but you can\'t add yourself'),
+            ),
+          );
+          print('you  can\'t add yourself! try adding your friends');
+          return;
+        }
 
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height - 120,
-                  left: 16,
-                  right: 16,
-                ),
-                content: Text('but you can\'t add yourself'),
+        //checking if user existq
+
+        bool userAlreadyexists = false;
+        if (widget.store.isNotEmpty) {
+          userAlreadyexists = widget.store.any(
+            (item) => item['data']['userid'] == userid,
+          );
+        }
+
+        //function as a boolean expression
+        if (userAlreadyexists) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              dismissDirection: DismissDirection.up,
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height - 120,
+                left: 16,
+                right: 16,
               ),
-            );
-            print('you  can\'t add yourself! try adding your friends');
-            return;
-          }
+              content: Text('This is user exist ! try adding a new user'),
+            ),
+          );
+          print('this is user already exist');
+          return;
+        }
+        setState(() {
+          updateuser(user);
+          saved = true;
+          print('user added');
+        });
 
-          //checking if user exist
-
-          bool userAlreadyexists = false;
-          if (widget.store.isNotEmpty) {
-            userAlreadyexists = widget.store.any(
-              (item) => item['data']['userid'] == userid,
-            );
-          }
-
-          //function as a boolean expression
-          if (userAlreadyexists) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                dismissDirection: DismissDirection.up,
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height - 120,
-                  left: 16,
-                  right: 16,
-                ),
-                content: Text('This is user exist ! try adding a new user'),
-              ),
-            );
-            print('this is user already exist');
-            return;
-          }
-          setState(() {
-            updateuser(user);
-            saved = true;
-            print('user added');
-          });
-
-          if (saved == true) {
-            Navigator.pop(context);
-          } else {
-            print('awaiting request');
-          }
+        if (saved == true) {
+          Navigator.pop(context);
+        } else {
+          print('awaiting request');
         }
       }
-    } catch (e) {
-      print('erro:${e.toString()}');
     }
   }
 
@@ -359,7 +420,7 @@ fetches folks datas
 
                         child: ElevatedButton(
                           onPressed: () {
-                            adduser(useridstr.text);
+                            userchecker(useridstr.text);
                           },
                           style: ButtonStyle(
                             alignment: Alignment.center,
