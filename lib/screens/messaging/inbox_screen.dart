@@ -49,25 +49,6 @@ custom functions to get users id from localsotrage
 
   final _accountinstance = FirebaseFirestore.instance.collection('database');
 
-  // Future<void> textuser() async {
-  //   final request = _accountinstance
-  //       .doc('123')
-  //       .collection('messages')
-  //       .doc('id-LJF041')
-  //       .collection('usermessage')
-  //       .snapshots()
-  //       .map((c) => c.docs);
-
-  //   await for (var messages in request) {
-  //     print('found a match');
-  //     for (var message in messages) {
-  //       final datum = message.data();
-
-  //       print('this is a test $datum');
-  //     }
-  //   }
-  // }
-
   Future<void> _profileresponse() async {
     '''
 this function in to get personal inform about your profile
@@ -137,7 +118,6 @@ this function is used to stream  folks and stream and add them to a local var
     // TODO: implement iniRtState
     super.initState();
     getId();
-    // textuser();
   }
 
   @override
