@@ -25,6 +25,7 @@ class _modalsheetState extends State<modalsheet> {
   bool exist = false;
   String messageid = '';
   Map<String, dynamic> _user = {};
+  bool pinid = false;
 
   final _data = FirebaseFirestore.instance.collection('database');
   final TextEditingController useridstr = TextEditingController();
@@ -113,14 +114,14 @@ share option to different socials
         final docid = singlet.id;
 
         print(_user);
-        _user = {'docid': docid, 'data': userdata, 'messageid': messageid};
+        _user = {'data': userdata, 'messageid': messageid, 'pinid': pinid};
         await updateuser(_user);
 
         setState(() {
           exist = true;
         });
 
-        saved && mounted ? Navigator.pop(context) : print('awaiting');
+        exist && mounted ? Navigator.pop(context) : print('awaiting');
       }
     }
   }
@@ -203,9 +204,9 @@ fetches folks datas
         final docid = singlet.id;
         final userid = datum['userid'];
         final Map<String, dynamic> user = {
-          'docid': docid,
           'data': datum,
           'messageid': messageid,
+          'pinid': pinid,
         };
         print('this is user intails $user');
 

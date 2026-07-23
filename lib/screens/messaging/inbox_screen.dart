@@ -332,7 +332,7 @@ this function is used to stream  folks and stream and add them to a local var
                           grad2: sColor,
                           label: abbr,
                           displayname: username,
-                          newthread: 'olodo uprising',
+                          newthread: 'new chat',
                         );
                       }),
                     );

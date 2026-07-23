@@ -9,10 +9,15 @@ class ChatScreen extends StatefulWidget {
     required this.messageid,
     required this.s_userid,
     required this.r_userid,
+    required this.refrenceid,
+    required this.pinid,
   });
   final String s_userid;
+  final String refrenceid;
   final String r_userid;
   final String messageid;
+  final bool pinid;
+
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
@@ -21,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
   //variables
   int color1 = 0xffF093FB;
   int color2 = 0xFF57F5A9;
-
+  late bool pin;
   final _textcontorlller = TextEditingController();
   final _cloudmessage = FirebaseFirestore.instance.collection('database');
   String _displayname = 'User 01';
@@ -32,7 +37,6 @@ class _ChatScreenState extends State<ChatScreen> {
   // data.sort((a,b)=>b.time)
 
   // }
-  Map<String, dynamic> user_data = {};
 
   // // functions
   Future<void> getUserDetials() async {
@@ -73,6 +77,16 @@ this function is triggered to fecth folks profile data in the chat sreen
         });
       }
     }
+  }
+
+  void pinchat() async {
+    await _cloudmessage
+        .doc('123')
+        .collection('users')
+        .doc(widget.s_userid)
+        .collection('folks')
+        .doc(widget.refrenceid)
+        .update({'pinid': pin});
   }
 
   Widget get _emptystate => Container(
@@ -178,12 +192,17 @@ this function is triggered to fecth folks profile data in the chat sreen
     }
   }
 
+  Color colorGet() {
+    return pin ? Colors.blue : Colors.black;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserDetials();
 
+    getUserDetials();
+    pin = widget.pinid;
     // _getDisplayNameStream();
     _messageResponse();
   }
@@ -235,6 +254,21 @@ this function is triggered to fecth folks profile data in the chat sreen
             ),
           ],
         ),
+
+        actions: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                pin = !pin;
+              });
+              pinchat();
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 20),
+              child: Icon(Icons.pin_drop, size: 37, color: colorGet()),
+            ),
+          ),
+        ],
       ),
 
       body: SafeArea(
