@@ -16,6 +16,8 @@ class InboxScreen extends StatefulWidget {
 class _InboxScreenState extends State<InboxScreen> {
   //variables
   var linkid = '';
+
+  List<Map<String, dynamic>> pinnedchats = [];
   List<Map<String, dynamic>> filteredUsers = [];
 
   List data = [];
@@ -87,6 +89,17 @@ this function in to get personal inform about your profile
     }
   }
 
+  void pinnedchat() {
+    '''
+this function sort pinnedchats from the the usersdirectory
+''';
+    pinnedchats = users.where((user) {
+      return user['userdata']['pinid'] == true;
+    }).toList();
+
+    print('these are pinned chats $pinnedchats');
+  }
+
   Future<void> getfolks() async {
     '''
 this function is used to stream  folks and stream and add them to a local var
@@ -106,11 +119,12 @@ this function is used to stream  folks and stream and add them to a local var
 
       for (var data in folk) {
         setState(() {
-          users.add(data.data());
+          users.add({'docid': data.id, 'userdata': data.data()});
 
           print('new users added $users');
+          filteredUsers = List.from(users);
+          pinnedchat();
         });
-        filteredUsers = List.from(users);
       }
     }
   }
@@ -238,25 +252,21 @@ this function is used to stream  folks and stream and add them to a local var
                   ),
                 ),
                 Row(
-                  children: [
-                    pinned_widget(
-                      text: 'sarah',
-                      grad1: 0xffFF6A88,
-                      grad2: 0xffFF9A8B,
-                    ),
+                  children: pinnedchats.map((user) {
+                    final profile = user['userdata']['data'];
 
-                    pinned_widget(
-                      text: 'marcus',
-                      grad1: 0xff84FAB0,
-                      grad2: 0xff8FD3F4,
-                    ),
-
-                    pinned_widget(
-                      text: 'elena',
-                      grad1: 0xffA1C4FD,
-                      grad2: 0xffC2E9FB,
-                    ),
-                  ],
+                    return pinned_widget(
+                      text: profile['username'],
+                      grad1: int.parse(
+                        intColorConverter(profile['profile-color'][0]),
+                        radix: 16,
+                      ),
+                      grad2: int.parse(
+                        intColorConverter(profile['profile-color'][1]),
+                        radix: 16,
+                      ),
+                    );
+                  }).toList(),
                 ),
               ],
             ),
@@ -287,16 +297,20 @@ this function is used to stream  folks and stream and add them to a local var
                       shrinkWrap: true,
                       itemCount: users.length,
                       itemBuilder: ((tontext, index) {
+                        var refrenceid = users[index]['docid'];
                         //streaming other users with stream
                         //modal userdatas for other users
-                        Map<String, dynamic> eprofile = users[index]['data'];
-                        String userid = eprofile['userid'];
-                        String messgaeid = users[index]['messageid'];
-                        String username = eprofile['username'];
+                        final _data = users[index]['userdata'];
+
+                        final profile = _data['data'];
+                        String userid = profile['userid'];
+                        String messgaeid = _data['messageid'];
+                        String username = profile['username'];
+                        bool pinid = _data['pinid'];
 
                         String abbr = username.substring(0, 2).toUpperCase();
-                        String email = eprofile['email'];
-                        List colors = eprofile['profile-color'];
+                        String email = profile['email'];
+                        List colors = profile['profile-color'];
                         int fColor = int.parse(
                           intColorConverter(colors[0]),
                           radix: 16,
@@ -309,6 +323,8 @@ this function is used to stream  folks and stream and add them to a local var
                         print('this is the datas $data');
 
                         return inbox_card(
+                          refrenceid: refrenceid,
+                          pinid: pinid,
                           messageid: messgaeid,
                           s_userid: linkid,
                           r_userid: userid,

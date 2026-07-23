@@ -7,16 +7,21 @@ class inbox_card extends StatelessWidget {
     required this.messageid,
     required this.s_userid,
     required this.r_userid,
-
+    required this.pinid,
     required this.grad1,
     required this.grad2,
+
     required this.label,
+    required this.refrenceid,
     required this.displayname,
     required this.newthread,
   });
   String s_userid;
   String r_userid;
   String messageid;
+  bool pinid;
+  String refrenceid;
+
   int grad1;
   int grad2;
   String label;
@@ -29,6 +34,8 @@ class inbox_card extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (c) => ChatScreen(
+            pinid: pinid,
+            refrenceid: refrenceid,
             messageid: messageid,
             s_userid: s_userid,
             r_userid: r_userid,
