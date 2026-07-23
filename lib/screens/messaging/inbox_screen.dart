@@ -17,10 +17,13 @@ class _InboxScreenState extends State<InboxScreen> {
   //variables
   var linkid = '';
 
+  List<Map<String, dynamic>> pinnedchats = [];
+  List<Map<String, dynamic>> filteredUsers = [];
+
   List data = [];
   int color1 = 0xffF093FB;
   int color2 = 0xFF57F5A9;
-
+  final SearchController _searchcontroller = SearchController();
   //uservariables
   final String _displayname = 'user01';
   final int _color1 = 0xffF093FB;
@@ -48,6 +51,7 @@ custom functions to get users id from localsotrage
   }
 
   final _accountinstance = FirebaseFirestore.instance.collection('database');
+
   Future<void> _profileresponse() async {
     '''
 this function in to get personal inform about your profile
@@ -85,6 +89,17 @@ this function in to get personal inform about your profile
     }
   }
 
+  void pinnedchat() {
+    '''
+this function sort pinnedchats from the the usersdirectory
+''';
+    pinnedchats = users.where((user) {
+      return user['userdata']['pinid'] == true;
+    }).toList();
+
+    print('these are pinned chats $pinnedchats');
+  }
+
   Future<void> getfolks() async {
     '''
 this function is used to stream  folks and stream and add them to a local var
@@ -104,12 +119,28 @@ this function is used to stream  folks and stream and add them to a local var
 
       for (var data in folk) {
         setState(() {
-          users.add(data.data());
+          users.add({'docid': data.id, 'userdata': data.data()});
 
           print('new users added $users');
+          filteredUsers = List.from(users);
+          pinnedchat();
         });
       }
     }
+  }
+
+  void filterUsers(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredUsers = List.from(users);
+      } else {
+        filteredUsers = users.where((user) {
+          final username = user['data']['username'].toLowerCase();
+
+          return username.contains(query.toLowerCase());
+        }).toList();
+      }
+    });
   }
 
   @override
@@ -168,31 +199,42 @@ this function is used to stream  folks and stream and add them to a local var
       ),
       body: Column(
         children: [
-          //search tab v1
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 15, 0, 10),
-            height: 50,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 15, 24, 10),
+            child: SearchAnchor.bar(
+              searchController: _searchcontroller,
+              barHintText: 'Search people...',
+              barBackgroundColor: WidgetStateProperty.all(Colors.white),
+              barElevation: WidgetStateProperty.all(0),
+              barShape: WidgetStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              suggestionsBuilder: (context, controller) {
+                final query = controller.text.toLowerCase();
 
-            width: 327,
+                final results = users.where((user) {
+                  final username = (user['data']['username'] as String)
+                      .toLowerCase();
 
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 14),
-                  child: Icon(Icons.search, color: Color(0xff9CA3AF)),
-                ),
+                  return username.contains(query);
+                });
 
-                SizedBox(width: 10),
-                Text('search', style: TextStyle(color: Color(0xff9CA3AF))),
-              ],
+                return results.map((user) {
+                  final profile = user['data'];
+
+                  return ListTile(
+                    title: Text(profile['username']),
+                    subtitle: Text(profile['email']),
+                    onTap: () {
+                      controller.closeView(profile['username']);
+
+                      // Open chat here if you want
+                    },
+                  );
+                });
+              },
             ),
           ),
-
-          thread_selector(),
 
           //pinned widget
           Container(
@@ -210,25 +252,21 @@ this function is used to stream  folks and stream and add them to a local var
                   ),
                 ),
                 Row(
-                  children: [
-                    pinned_widget(
-                      text: 'sarah',
-                      grad1: 0xffFF6A88,
-                      grad2: 0xffFF9A8B,
-                    ),
+                  children: pinnedchats.map((user) {
+                    final profile = user['userdata']['data'];
 
-                    pinned_widget(
-                      text: 'marcus',
-                      grad1: 0xff84FAB0,
-                      grad2: 0xff8FD3F4,
-                    ),
-
-                    pinned_widget(
-                      text: 'elena',
-                      grad1: 0xffA1C4FD,
-                      grad2: 0xffC2E9FB,
-                    ),
-                  ],
+                    return pinned_widget(
+                      text: profile['username'],
+                      grad1: int.parse(
+                        intColorConverter(profile['profile-color'][0]),
+                        radix: 16,
+                      ),
+                      grad2: int.parse(
+                        intColorConverter(profile['profile-color'][1]),
+                        radix: 16,
+                      ),
+                    );
+                  }).toList(),
                 ),
               ],
             ),
@@ -245,40 +283,67 @@ this function is used to stream  folks and stream and add them to a local var
             ),
             width: 376,
             child: SingleChildScrollView(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: users.length,
-                itemBuilder: (ctx, index) {
-                  //streaming other users with stream
-                  //modal userdatas for other users
-                  Map<String, dynamic> eprofile = users[index]['data'];
-                  String userid = eprofile['userid'];
-                  String messgaeid = users[index]['messageid'];
-                  String username = eprofile['username'];
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _accountinstance
+                    .doc('123')
+                    .collection('users')
+                    .doc(linkid)
+                    .collection('folks')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: ((tontext, index) {
+                        var refrenceid = users[index]['docid'];
+                        //streaming other users with stream
+                        //modal userdatas for other users
+                        final _data = users[index]['userdata'];
 
-                  String abbr = username.substring(0, 2).toUpperCase();
-                  String email = eprofile['email'];
-                  List colors = eprofile['profile-color'];
-                  int fColor = int.parse(
-                    intColorConverter(colors[0]),
-                    radix: 16,
-                  );
-                  int sColor = int.parse(
-                    intColorConverter(colors[1]),
-                    radix: 16,
-                  );
+                        final profile = _data['data'];
+                        String userid = profile['userid'];
+                        String messgaeid = _data['messageid'];
+                        String username = profile['username'];
+                        bool pinid = _data['pinid'];
 
-                  print('this is the datas $data');
-                  return inbox_card(
-                    messageid: messgaeid,
-                    s_userid: linkid,
-                    r_userid: userid,
-                    grad1: fColor,
-                    grad2: sColor,
-                    label: abbr,
-                    displayname: username,
-                    newthread: 'olodo uprising',
+                        String abbr = username.substring(0, 2).toUpperCase();
+                        String email = profile['email'];
+                        List colors = profile['profile-color'];
+                        int fColor = int.parse(
+                          intColorConverter(colors[0]),
+                          radix: 16,
+                        );
+                        int sColor = int.parse(
+                          intColorConverter(colors[1]),
+                          radix: 16,
+                        );
+
+                        print('this is the datas $data');
+
+                        return inbox_card(
+                          refrenceid: refrenceid,
+                          pinid: pinid,
+                          messageid: messgaeid,
+                          s_userid: linkid,
+                          r_userid: userid,
+                          grad1: fColor,
+                          grad2: sColor,
+                          label: abbr,
+                          displayname: username,
+                          newthread: 'new chat',
+                        );
+                      }),
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return Center(
+                    child: Text(
+                      'No message yet add a friend to start chatting',
+                    ),
                   );
                 },
               ),

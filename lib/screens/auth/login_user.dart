@@ -34,9 +34,33 @@ class _LoginUserState extends State<LoginUser> {
 
       print('${newUser.user!.email}User created');
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger(child: SnackBar(content: Text(e.message.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          dismissDirection: DismissDirection.up,
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 120,
+            left: 16,
+            right: 16,
+          ),
+          content: Text(e.toString()),
+        ),
+      );
     } catch (e) {
-      ScaffoldMessenger(child: SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          dismissDirection: DismissDirection.up,
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 120,
+            left: 16,
+            right: 16,
+          ),
+          content: Text(e.toString()),
+        ),
+      );
     }
   }
 
