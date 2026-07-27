@@ -91,7 +91,7 @@ this function is triggered to fecth folks profile data in the chat sreen
 
   Widget get _emptystate => Container(
     alignment: Alignment.center,
-    height: 708,
+    height: 500,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -272,52 +272,51 @@ this function is triggered to fecth folks profile data in the chat sreen
       ),
 
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              StreamBuilder<QuerySnapshot?>(
-                stream: _cloudmessage
-                    .doc('123')
-                    .collection('messages')
-                    .doc(widget.messageid)
-                    .collection('usermessage')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: SizedBox(
-                        height: 708,
-
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: const CircularProgressIndicator(),
-                        ),
-                      ),
-                    );
-                  } else if (snapshot.data!.docs.isNotEmpty) {
-                    return SizedBox(
+        child: Column(
+          children: [
+            StreamBuilder<QuerySnapshot?>(
+              stream: _cloudmessage
+                  .doc('123')
+                  .collection('messages')
+                  .doc(widget.messageid)
+                  .collection('usermessage')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: SizedBox(
                       height: 708,
-                      child: ListView.builder(
-                        itemBuilder: (ctx, ind) {
-                          return
-                          //message sorting by email
-                          _messagestate(ind);
-                        },
-                        itemCount: _responseint,
+
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(),
                       ),
-                    );
-                  } else if (snapshot.data!.docs.isEmpty) {
-                    return _emptystate;
-                  } else {
-                    return Text('no data here');
-                  }
-                },
-              ),
-              Container(
+                    ),
+                  );
+                } else if (snapshot.data!.docs.isNotEmpty) {
+                  return Expanded(
+                    flex: 4,
+                    child: ListView.builder(
+                      itemBuilder: (ctx, ind) {
+                        return
+                        //message sorting by email
+                        SingleChildScrollView(child: _messagestate(ind));
+                      },
+                      itemCount: _responseint,
+                    ),
+                  );
+                } else if (snapshot.data!.docs.isEmpty) {
+                  return _emptystate;
+                } else {
+                  return Text('no data here');
+                }
+              },
+            ),
+
+            Expanded(
+              child: Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                width: 343,
-                height: 80,
+                margin: EdgeInsets.fromLTRB(5, 4, 5, 2),
                 child: TextField(
                   controller: _textcontorlller,
                   onSubmitted: (text) {
@@ -355,8 +354,8 @@ this function is triggered to fecth folks profile data in the chat sreen
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
