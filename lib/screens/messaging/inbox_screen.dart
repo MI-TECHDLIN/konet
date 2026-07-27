@@ -273,79 +273,80 @@ this function is used to stream  folks and stream and add them to a local var
           ),
 
           //chat_home;
-          Container(
-            height: 460,
-            margin: EdgeInsets.only(top: 30),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(top: 30),
 
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-              color: Color(0xffFFFFFF),
-            ),
-            width: 376,
-            child: SingleChildScrollView(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _accountinstance
-                    .doc('123')
-                    .collection('users')
-                    .doc(linkid)
-                    .collection('folks')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: users.length,
-                      itemBuilder: ((tontext, index) {
-                        var refrenceid = users[index]['docid'];
-                        //streaming other users with stream
-                        //modal userdatas for other users
-                        final _data = users[index]['userdata'];
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(32),
+                color: Color(0xffFFFFFF),
+              ),
+              width: 376,
+              child: SingleChildScrollView(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: _accountinstance
+                      .doc('123')
+                      .collection('users')
+                      .doc(linkid)
+                      .collection('folks')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: users.length,
+                        itemBuilder: ((tontext, index) {
+                          var refrenceid = users[index]['docid'];
+                          //streaming other users with stream
+                          //modal userdatas for other users
+                          final _data = users[index]['userdata'];
 
-                        final profile = _data['data'];
-                        String userid = profile['userid'];
-                        String messgaeid = _data['messageid'];
-                        String username = profile['username'];
-                        bool pinid = _data['pinid'];
+                          final profile = _data['data'];
+                          String userid = profile['userid'];
+                          String messgaeid = _data['messageid'];
+                          String username = profile['username'];
+                          bool pinid = _data['pinid'];
 
-                        String abbr = username.substring(0, 2).toUpperCase();
-                        String email = profile['email'];
-                        List colors = profile['profile-color'];
-                        int fColor = int.parse(
-                          intColorConverter(colors[0]),
-                          radix: 16,
-                        );
-                        int sColor = int.parse(
-                          intColorConverter(colors[1]),
-                          radix: 16,
-                        );
+                          String abbr = username.substring(0, 2).toUpperCase();
+                          String email = profile['email'];
+                          List colors = profile['profile-color'];
+                          int fColor = int.parse(
+                            intColorConverter(colors[0]),
+                            radix: 16,
+                          );
+                          int sColor = int.parse(
+                            intColorConverter(colors[1]),
+                            radix: 16,
+                          );
 
-                        print('this is the datas $data');
+                          print('this is the datas $data');
 
-                        return inbox_card(
-                          refrenceid: refrenceid,
-                          pinid: pinid,
-                          messageid: messgaeid,
-                          s_userid: linkid,
-                          r_userid: userid,
-                          grad1: fColor,
-                          grad2: sColor,
-                          label: abbr,
-                          displayname: username,
-                          newthread: 'new chat',
-                        );
-                      }),
+                          return inbox_card(
+                            refrenceid: refrenceid,
+                            pinid: pinid,
+                            messageid: messgaeid,
+                            s_userid: linkid,
+                            r_userid: userid,
+                            grad1: fColor,
+                            grad2: sColor,
+                            label: abbr,
+                            displayname: username,
+                            newthread: 'new chat',
+                          );
+                        }),
+                      );
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return Center(
+                      child: Text(
+                        'No message yet add a friend to start chatting',
+                      ),
                     );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  return Center(
-                    child: Text(
-                      'No message yet add a friend to start chatting',
-                    ),
-                  );
-                },
+                  },
+                ),
               ),
             ),
           ),
