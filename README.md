@@ -6,10 +6,10 @@ this is the mvp version of this app
 
 ## Video demo 
 
-# Goggle Drive 
+## Goggle Drive 
 https://drive.google.com/file/d/1Hn3IWMAz5K4ckkfV4a1LQr47liYq7ofK/view?usp=drive_link
 
-# Youtube Video 
+## Youtube Video 
 https://youtu.be/Sqxjfwoh0Us?si=bKHMObpTLt9KCWYd
 
 ## How konet works
