@@ -5,7 +5,12 @@ this is the mvp version of this app
 <img width="1920" height="1080" alt="konet Banner 1920x1080 v2" src="https://github.com/user-attachments/assets/6009c1d1-1b21-4ec4-a623-bd1918e2434e" />
 
 ## Video demo 
+
+# Goggle Drive 
 https://drive.google.com/file/d/1Hn3IWMAz5K4ckkfV4a1LQr47liYq7ofK/view?usp=drive_link
+
+# Youtube Video 
+https://youtu.be/Sqxjfwoh0Us?si=bKHMObpTLt9KCWYd
 
 ## How konet works
 - a user creates an account
